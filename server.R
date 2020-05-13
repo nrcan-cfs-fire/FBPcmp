@@ -60,7 +60,7 @@ shinyServer(function(input, output, session) {
         return (r)
     }
     
-    makePlot <- function(forWhat, ylab, ylim=NULL)
+    makePlot <- function(vsWhat, forWhat, ylab, ylim=NULL)
     {
         fuels <- makeFuels()
         if (is.null(ylim))
@@ -68,42 +68,42 @@ shinyServer(function(input, output, session) {
             ylim <- forWhat
         }
         maxY <- max(fuels[[ylim]])
-        cols <- c('FuelType', 'FFMC', forWhat)
+        cols <- c('FuelType', vsWhat, forWhat)
         col <- 1
         for (fuel in unique(fuels$FuelType))
         {
             f <- fuels[fuels$FuelType == fuel, ..cols]
             if (1 == col)
             {
-                plot(f[[forWhat]] ~ f$FFMC, ylim=c(0, maxY), type='l', col=1, lty=1, xlab="FFMC", ylab=ylab)
+                plot(f[[forWhat]] ~ f[[vsWhat]], ylim=c(0, maxY), type='l', col=1, lty=1, xlab=vsWhat, ylab=ylab)
             }
             else
             {
-                lines(f[[forWhat]] ~ f$FFMC, type='l', col=col, lty=col)
+                lines(f[[forWhat]] ~ f[[vsWhat]], type='l', col=col, lty=col)
             }
             f <- fuels[fuels$FuelType == fuel & fuels$FD == 'I', ..cols]
-            lines(f[[forWhat]] ~ f$FFMC, type='l', col=col, lty=col, lwd=2)
+            lines(f[[forWhat]] ~ f[[vsWhat]], type='l', col=col, lty=col, lwd=2)
             f <- fuels[fuels$FuelType == fuel & fuels$FD == 'C', ..cols]
-            lines(f[[forWhat]] ~ f$FFMC, type='l', col=col, lty=1, lwd=3)
+            lines(f[[forWhat]] ~ f[[vsWhat]], type='l', col=col, lty=1, lwd=3)
             col <- col + 1
         }
         legend(input$ffmc[1], y=maxY, legend=unique(fuels$FuelType), col=seq(1, col), lty=seq(1, col))
     }
     
     output$rosPlot <- renderPlot({
-        makePlot('ROS', "Rate of Spread (m/min)")
+        makePlot('FFMC', 'ROS', "Rate of Spread (m/min)")
     })
     
     output$hfiPlot <- renderPlot({
-        makePlot('HFI', "Head Fire Intensity (kW/m)")
+        makePlot('FFMC', 'HFI', "Head Fire Intensity (kW/m)")
     })
     
     output$sfcPlot <- renderPlot({
-        makePlot('SFC', "Surface Fuel Consumption (kg/m^2)", 'TFC')
+        makePlot('FFMC', 'SFC', "Surface Fuel Consumption (kg/m^2)", 'TFC')
     })
     
     output$tfcPlot <- renderPlot({
-        makePlot('TFC', "Total Fuel Consumption (kg/m^2)")
+        makePlot('FFMC', 'TFC', "Total Fuel Consumption (kg/m^2)")
     })
     
     # Filter data based on selections
