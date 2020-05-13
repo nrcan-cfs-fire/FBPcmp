@@ -18,52 +18,56 @@ shinyUI(dashboardPage(
     dashboardHeader(title = 'FBP Visualizer'),
     dashboardSidebar(
         sidebarMenu(
-            menuItem("FFMC", tabName = "ffmc"),
-            menuItem("BUI", tabName = "bui")
+            id = 'sidebarmenu',
+            menuItem("FFMC", tabName = "ffmcTab"),
+            menuItem("BUI", tabName = "buiTab")
         ),
         dateInput("date", label = "Date"),
-        sliderInput(
-            "ffmc",
-            "FFMC",
-            value = c(70, 101),
-            min = 0,
-            max = 101,
-            step = 0.1
-        ),
-        numericInput(
-            "wind",
-            "Wind Speed",
-            value = 20,
-            min = 0,
-            step = 0.1
-        ),
-        numericInput(
-            "dmc",
-            "DMC",
-            value = 20,
-            min = 0,
-            step = 1
-        ),
-        numericInput(
-            "dc",
-            "DC",
-            value = 200,
-            min = 0,
-            step = 1
-        ),
-        disabled(numericInput(
-            "bui",
-            "BUI",
-            value = 80,
-            min = 0,
-            step = 1
-        )),
         checkboxGroupInput("fuels", "Fuels", choices = ALL_FUELS, selected =
-                               ALL_FUELS)
+                               ALL_FUELS),
+        conditionalPanel(
+            "input.sidebarmenu=='ffmcTab'",
+            sliderInput(
+                "ffmcRange",
+                "FFMC",
+                value = c(70, 101),
+                min = 0,
+                max = 101,
+                step = 0.1
+            ),
+            numericInput(
+                "wind",
+                "Wind Speed",
+                value = 20,
+                min = 0,
+                step = 0.1
+            ),
+            numericInput(
+                "dmc",
+                "DMC",
+                value = 20,
+                min = 0,
+                step = 1
+            ),
+            numericInput(
+                "dc",
+                "DC",
+                value = 200,
+                min = 0,
+                step = 1
+            ),
+            disabled(numericInput(
+                "bui",
+                "BUI",
+                value = 80,
+                min = 0,
+                step = 1
+            )),
+        )
     ),
     dashboardBody(tabItems(
         tabItem(
-            tabName = "ffmc",
+            tabName = "ffmcTab",
             tabsetPanel(
                 tabPanel("ROS", plotOutput("rosPlot")),
                 tabPanel("HFI", plotOutput("hfiPlot")),
@@ -87,6 +91,6 @@ shinyUI(dashboardPage(
             # Create a new row for the table.
             DT::dataTableOutput("table")
         ),
-        tabItem(tabName = "bui")
+        tabItem(tabName = "buiTab")
     ))
 ))

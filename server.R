@@ -31,7 +31,7 @@ shinyServer(function(input, output, session) {
     
     makeData <- function(fuel)
     {
-        ffmc <- input$ffmc
+        ffmc <- input$ffmcRange
         bui <- input$bui
         ws <- input$wind
         dj <- as.POSIXlt(input$date)$yday
@@ -80,6 +80,7 @@ shinyServer(function(input, output, session) {
         {
             ylim <- forWhat
         }
+        minX <- min(fuels[[vsWhat]])
         maxY <- max(fuels[[ylim]])
         cols <- c('FuelType', vsWhat, forWhat)
         col <- 1
@@ -126,7 +127,7 @@ shinyServer(function(input, output, session) {
             col <- col + 1
         }
         legend(
-            input$ffmc[1],
+            minX,
             y = maxY,
             legend = unique(fuels$FuelType),
             col = seq(1, col),
