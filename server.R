@@ -60,101 +60,50 @@ shinyServer(function(input, output, session) {
         return (r)
     }
     
-    output$rosPlot <- renderPlot({
+    makePlot <- function(forWhat, ylab, ylim=NULL)
+    {
         fuels <- makeFuels()
-        maxY <- max(fuels$ROS)
+        if (is.null(ylim))
+        {
+            ylim <- forWhat
+        }
+        maxY <- max(fuels[[ylim]])
+        cols <- c('FuelType', 'FFMC', forWhat)
         col <- 1
         for (fuel in unique(fuels$FuelType))
         {
-            f <- fuels[fuels$FuelType == fuel,c('FuelType', 'FFMC', 'ROS')]
+            f <- fuels[fuels$FuelType == fuel, ..cols]
             if (1 == col)
             {
-                plot(f$ROS ~ f$FFMC, ylim=c(0, maxY), type='l', col=1, lty=1, xlab="FFMC", ylab="Rate of Spread (m/min)")
+                plot(f[[forWhat]] ~ f$FFMC, ylim=c(0, maxY), type='l', col=1, lty=1, xlab="FFMC", ylab=ylab)
             }
             else
             {
-                lines(f$ROS ~ f$FFMC, type='l', col=col, lty=col)
+                lines(f[[forWhat]] ~ f$FFMC, type='l', col=col, lty=col)
             }
-            f <- fuels[fuels$FuelType == fuel & fuels$FD == 'I',c('FuelType', 'FFMC', 'ROS')]
-            lines(f$ROS ~ f$FFMC, type='l', col=col, lty=col, lwd=2)
-            f <- fuels[fuels$FuelType == fuel & fuels$FD == 'C',c('FuelType', 'FFMC', 'ROS')]
-            lines(f$ROS ~ f$FFMC, type='l', col=col, lty=1, lwd=3)
+            f <- fuels[fuels$FuelType == fuel & fuels$FD == 'I', ..cols]
+            lines(f[[forWhat]] ~ f$FFMC, type='l', col=col, lty=col, lwd=2)
+            f <- fuels[fuels$FuelType == fuel & fuels$FD == 'C', ..cols]
+            lines(f[[forWhat]] ~ f$FFMC, type='l', col=col, lty=1, lwd=3)
             col <- col + 1
         }
         legend(input$ffmc[1], y=maxY, legend=unique(fuels$FuelType), col=seq(1, col), lty=seq(1, col))
+    }
+    
+    output$rosPlot <- renderPlot({
+        makePlot('ROS', "Rate of Spread (m/min)")
     })
     
     output$hfiPlot <- renderPlot({
-        fuels <- makeFuels()
-        maxY <- max(fuels$HFI)
-        col <- 1
-        for (fuel in unique(fuels$FuelType))
-        {
-            f <- fuels[fuels$FuelType == fuel,c('FuelType', 'FFMC', 'HFI')]
-            if (1 == col)
-            {
-                plot(f$HFI ~ f$FFMC, ylim=c(0, maxY), type='l', col=1, lty=1, xlab="FFMC", ylab="Head Fire Intensity (kW/m)")
-            }
-            else
-            {
-                lines(f$HFI ~ f$FFMC, type='l', col=col, lty=col)
-            }
-            f <- fuels[fuels$FuelType == fuel & fuels$FD == 'I',c('FuelType', 'FFMC', 'HFI')]
-            lines(f$HFI ~ f$FFMC, type='l', col=col, lty=col, lwd=2)
-            f <- fuels[fuels$FuelType == fuel & fuels$FD == 'C',c('FuelType', 'FFMC', 'HFI')]
-            lines(f$HFI ~ f$FFMC, type='l', col=col, lty=1, lwd=3)
-            col <- col + 1
-        }
-        legend(input$ffmc[1], y=maxY, legend=unique(fuels$FuelType), col=seq(1, col), lty=seq(1, col))
+        makePlot('HFI', "Head Fire Intensity (kW/m)")
     })
     
     output$sfcPlot <- renderPlot({
-        fuels <- makeFuels()
-        # use same scale as TFC so you can flip between them
-        maxY <- max(fuels$TFC)
-        col <- 1
-        for (fuel in unique(fuels$FuelType))
-        {
-            f <- fuels[fuels$FuelType == fuel,c('FuelType', 'FFMC', 'SFC')]
-            if (1 == col)
-            {
-                plot(f$SFC ~ f$FFMC, ylim=c(0, maxY), type='l', col=1, lty=1, xlab="FFMC", ylab="Surface FUel Consumption (kg/m^2)")
-            }
-            else
-            {
-                lines(f$SFC ~ f$FFMC, type='l', col=col, lty=col)
-            }
-            f <- fuels[fuels$FuelType == fuel & fuels$FD == 'I',c('FuelType', 'FFMC', 'SFC')]
-            lines(f$SFC ~ f$FFMC, type='l', col=col, lty=col, lwd=2)
-            f <- fuels[fuels$FuelType == fuel & fuels$FD == 'C',c('FuelType', 'FFMC', 'SFC')]
-            lines(f$SFC ~ f$FFMC, type='l', col=col, lty=1, lwd=3)
-            col <- col + 1
-        }
-        legend(input$ffmc[1], y=maxY, legend=unique(fuels$FuelType), col=seq(1, col), lty=seq(1, col))
+        makePlot('SFC', "Surface FUel Consumption (kg/m^2)", 'TFC')
     })
     
     output$tfcPlot <- renderPlot({
-        fuels <- makeFuels()
-        maxY <- max(fuels$TFC)
-        col <- 1
-        for (fuel in unique(fuels$FuelType))
-        {
-            f <- fuels[fuels$FuelType == fuel,c('FuelType', 'FFMC', 'TFC')]
-            if (1 == col)
-            {
-                plot(f$TFC ~ f$FFMC, ylim=c(0, maxY), type='l', col=1, lty=1, xlab="FFMC", ylab="Total FUel Consumption (kg/m^2)")
-            }
-            else
-            {
-                lines(f$TFC ~ f$FFMC, type='l', col=col, lty=col)
-            }
-            f <- fuels[fuels$FuelType == fuel & fuels$FD == 'I',c('FuelType', 'FFMC', 'TFC')]
-            lines(f$TFC ~ f$FFMC, type='l', col=col, lty=col, lwd=2)
-            f <- fuels[fuels$FuelType == fuel & fuels$FD == 'C',c('FuelType', 'FFMC', 'TFC')]
-            lines(f$TFC ~ f$FFMC, type='l', col=col, lty=1, lwd=3)
-            col <- col + 1
-        }
-        legend(input$ffmc[1], y=maxY, legend=unique(fuels$FuelType), col=seq(1, col), lty=seq(1, col))
+        makePlot('TFC', "Total FUel Consumption (kg/m^2)")
     })
     
     # Filter data based on selections
@@ -165,6 +114,4 @@ shinyServer(function(input, output, session) {
         }
         data
     }))
-    
-
 })
