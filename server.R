@@ -112,6 +112,9 @@ shinyServer(function(input, output, session) {
         if (input$fuel != "All") {
             data <- data[data$FuelType == input$fuel,]
         }
+        if (input$fd != "All") {
+            data <- data[data$FD == substr(input$fd[1], 1, 1),]
+        }
         data
     }))
 })

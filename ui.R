@@ -39,6 +39,12 @@ shinyUI(
                                c("All",
                                  "C-1", "C-2", "C-3", "C-4", "C-5", "C-6", "C-7"))
             ),
+            column(4,
+                   selectInput("fd",
+                               "Fire Type:",
+                               c("All",
+                                 "Surface", "Intermittent Crown", "Crown"))
+            ),
             # Create a new row for the table.
             DT::dataTableOutput("table")
         )
