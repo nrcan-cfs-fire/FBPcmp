@@ -11,6 +11,8 @@ library(shiny)
 library(shinydashboard)
 library(shinyjs)
 
+ALL_FUELS <- c("C-1", "C-2", "C-3", "C-4", "C-5", "C-6", "C-7")
+
 # Define UI for application that draws a histogram
 shinyUI(
     dashboardPage(
@@ -24,7 +26,8 @@ shinyUI(
             numericInput("wind", "Wind Speed", value=20, min=0, step=0.1),
             numericInput("dmc", "DMC", value=20, min=0, step=1),
             numericInput("dc", "DC", value=200, min=0, step=1),
-            disabled(numericInput("bui", "BUI", value=80, min=0, step=1))
+            disabled(numericInput("bui", "BUI", value=80, min=0, step=1)),
+            checkboxGroupInput("fuels", "Fuels", choices=ALL_FUELS, selected=ALL_FUELS)
         ),
         dashboardBody(
             tabItems(

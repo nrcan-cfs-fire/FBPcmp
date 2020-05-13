@@ -44,11 +44,18 @@ shinyServer(function(input, output, session) {
     
     makeFuels <- function()
     {
-        r <- makeData("C-1")
-        for (fuel in c("C-2", "C-3", "C-4", "C-5", "C-6", "C-7"))
+        if (0 == length(input$fuels))
         {
-            f <- makeData(fuel)
-            r <- rbind(r, f)
+            return(NULL)
+        }
+        r <- makeData(input$fuels[1])
+        if (1 < length(input$fuels))
+        {
+            for (fuel in seq(2, length(input$fuels)))
+            {
+                f <- makeData(input$fuels[fuel])
+                r <- rbind(r, f)
+            }
         }
         return (r)
     }
