@@ -10,6 +10,8 @@
 library(shiny)
 library(shinyjs)
 library(cffdrs)
+library(ggplot2)
+
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output, session) {
@@ -34,17 +36,22 @@ shinyServer(function(input, output, session) {
         bui <- input$bui
         ws <- input$wind
         dj <- as.POSIXlt(input$date)$yday
-        print(ffmc)
-        print(bui)
-        print(ws)
-        print(dj)
         rows <- seq(0,(ffmc[2] - ffmc[1]) / 0.1)
-        print(length(rows))
         ffmcs <- seq(ffmc[1], ffmc[2], by=0.1)
-        print(length(ffmcs))
         input <- data.table(ID=rows, FuelType=fuel, LAT=55, LONG=-120, FFMC=ffmcs, BUI=bui, WS=ws, GS=0, Dj=dj, Aspect=0)
         output <- merge(input, data.table(fbp(input)), by=c('ID'))[,ID:=NULL]
         return (output[,c('FuelType', 'FFMC', 'ROS')])
+    }
+    
+    makeFuels <- function()
+    {
+        r <- makeData("C-1")
+        for (fuel in c("C-2", "C-3", "C-4", "C-5", "C-6", "C-7"))
+        {
+            f <- makeData(fuel)
+            r <- rbind(r, f)
+        }
+        return (r)
     }
     
     output$distPlot <- renderPlot({
@@ -58,5 +65,15 @@ shinyServer(function(input, output, session) {
             col <- col + 1
         }
     })
+    
+    # Filter data based on selections
+    output$table <- DT::renderDataTable(DT::datatable({
+        data <- makeFuels()
+        if (input$fuel != "All") {
+            data <- data[data$FuelType == input$fuel,]
+        }
+        data
+    }))
+    
 
 })

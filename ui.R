@@ -10,6 +10,8 @@
 library(shiny)
 library(shinydashboard)
 library(shinyjs)
+library(ggplot2)
+
 # Define UI for application that draws a histogram
 shinyUI(
     dashboardPage(
@@ -19,7 +21,7 @@ shinyUI(
               menuItem("ROS", tabName="ros")  
             ),
             dateInput("date", label="Date"),
-            sliderInput("ffmc", "FFMC", value=c(0, 101), min=0, max=101, step=0.1),
+            sliderInput("ffmc", "FFMC", value=c(70, 101), min=0, max=101, step=0.1),
             numericInput("wind", "Wind Speed", value=20, min=0, step=0.1),
             numericInput("dmc", "DMC", value=20, min=0, step=1),
             numericInput("dc", "DC", value=200, min=0, step=1),
@@ -28,7 +30,19 @@ shinyUI(
         dashboardBody(
             tabItems(
                 tabItem(tabName="ros",    
-                    plotOutput("distPlot")
+                    fluidPage(
+                        plotOutput("distPlot"),
+                        fluidRow(
+                            column(4,
+                                   selectInput("fuel",
+                                               "Fuel:",
+                                               c("All",
+                                                 "C-1", "C-2", "C-3", "C-4", "C-5", "C-6", "C-7"))
+                            )
+                        ),
+                        # Create a new row for the table.
+                        DT::dataTableOutput("table")
+                    )
                 )
             )
         )
