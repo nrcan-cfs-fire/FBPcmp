@@ -29,7 +29,7 @@ shinyUI(dashboardPage(
                                ALL_FUELS),
         conditionalPanel(
             "input.sidebarmenu=='windTab'",
-            numericInput(
+            sliderInput(
                 "windFFMC",
                 "FFMC",
                 value = 90,
