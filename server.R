@@ -55,16 +55,18 @@ shinyServer(function(input, output, session) {
     }
     
     output$distPlot <- renderPlot({
-        c1 <- makeData("C-1")[,c('FuelType', 'FFMC', 'ROS')]
-        plot(c1$ROS ~ c1$FFMC, type='l', col=1, lty=1, xlab="FFMC", ylab="Rate of Spread (m/min)")
+        fuels <- makeFuels()
+        c1 <- fuels[fuels$FuelType == "C-1",c('FuelType', 'FFMC', 'ROS')]
+        maxRos <- max(fuels$ROS)
+        plot(c1$ROS ~ c1$FFMC, ylim=c(0, maxRos), type='l', col=1, lty=1, xlab="FFMC", ylab="Rate of Spread (m/min)")
         col = 2
         for (fuel in c("C-2", "C-3", "C-4", "C-5", "C-6", "C-7"))
         {
-            f <- makeData(fuel)[,c('FuelType', 'FFMC', 'ROS')]
+            f <- fuels[fuels$FuelType == fuel,c('FuelType', 'FFMC', 'ROS')]
             lines(f$ROS ~ f$FFMC, type='l', col=col, lty=col)
             col <- col + 1
         }
-        legend(input$ffmc[1], y=70, legend=c("C-1", "C-2", "C-3", "C-4", "C-5", "C-6", "C-7"), col=seq(1, col), lty=seq(1, col))
+        legend(input$ffmc[1], y=maxRos, legend=c("C-1", "C-2", "C-3", "C-4", "C-5", "C-6", "C-7"), col=seq(1, col), lty=seq(1, col))
     })
     
     # Filter data based on selections
