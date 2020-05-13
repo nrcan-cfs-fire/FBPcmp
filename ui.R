@@ -36,61 +36,118 @@ shinyUI(dashboardPage(
                 step = 0.1
             ),
             numericInput(
-                "wind",
+                "ffmcWind",
                 "Wind Speed",
                 value = 20,
                 min = 0,
                 step = 0.1
             ),
             numericInput(
-                "dmc",
+                "ffmcDMC",
                 "DMC",
                 value = 20,
                 min = 0,
                 step = 1
             ),
             numericInput(
-                "dc",
+                "ffmcDC",
                 "DC",
                 value = 200,
                 min = 0,
                 step = 1
             ),
             disabled(numericInput(
-                "bui",
+                "ffmcBUI",
                 "BUI",
                 value = 80,
                 min = 0,
                 step = 1
             )),
+        ),
+        conditionalPanel(
+            "input.sidebarmenu=='buiTab'",
+            numericInput(
+                "buiFFMC",
+                "FFMC",
+                value = 80,
+                min = 0,
+                max = 101,
+                step = 0.1
+            ),
+            numericInput(
+                "buiWind",
+                "Wind Speed",
+                value = 20,
+                min = 0,
+                step = 0.1
+            ),
+            numericInput(
+                "buiISI",
+                "ISI",
+                value = 10,
+                min = 0,
+                step = 0.1
+            ),
+            sliderInput(
+                "buiRange",
+                "BUI",
+                value = c(0, 100),
+                min = 0,
+                max = 300,
+                step = 1
+            )
         )
     ),
     dashboardBody(tabItems(
         tabItem(
             tabName = "ffmcTab",
             tabsetPanel(
-                tabPanel("ROS", plotOutput("rosPlot")),
-                tabPanel("HFI", plotOutput("hfiPlot")),
-                tabPanel("SFC", plotOutput("sfcPlot")),
-                tabPanel("TFC", plotOutput("tfcPlot"))
+                tabPanel("ROS", plotOutput("ffmcROS")),
+                tabPanel("HFI", plotOutput("ffmcHFI")),
+                tabPanel("SFC", plotOutput("ffmcSFC")),
+                tabPanel("TFC", plotOutput("ffmcTFC"))
             ),
             column(4,
                    selectInput(
-                       "fuel",
+                       "ffmcFuel",
                        "Fuel:",
                        c("All",
                          "C-1", "C-2", "C-3", "C-4", "C-5", "C-6", "C-7")
                    )),
             column(4,
                    selectInput(
-                       "fd",
+                       "ffmcFD",
                        "Fire Type:",
                        c("All",
                          "Surface", "Intermittent Crown", "Crown")
                    )),
             # Create a new row for the table.
-            DT::dataTableOutput("table")
+            DT::dataTableOutput("ffmcTable")
         ),
-        tabItem(tabName = "buiTab")
+        tabItem(
+            tabName = "buiTab",
+            tabsetPanel(
+                tabPanel("ROS", plotOutput("buiROS")),
+                tabPanel("HFI", plotOutput("buiHFI")),
+                tabPanel("SFC", plotOutput("buiSFC")),
+                tabPanel("TFC", plotOutput("buiTFC"))
+            ),
+            column(4,
+                   selectInput(
+                       "buiFuel",
+                       "Fuel:",
+                       c("All",
+                         "C-1", "C-2", "C-3", "C-4", "C-5", "C-6", "C-7")
+                   )),
+            column(4,
+                   selectInput(
+                       "buiFD",
+                       "Fire Type:",
+                       c("All",
+                         "Surface", "Intermittent Crown", "Crown")
+                   )),
+            # Create a new row for the table.
+            DT::dataTableOutput("buiTable")
+        )
     ))
 ))
