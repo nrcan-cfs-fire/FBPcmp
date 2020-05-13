@@ -40,7 +40,7 @@ shinyServer(function(input, output, session) {
         ffmcs <- seq(ffmc[1], ffmc[2], by=0.1)
         input <- data.table(ID=rows, FuelType=fuel, LAT=55, LONG=-120, FFMC=ffmcs, BUI=bui, WS=ws, GS=0, Dj=dj, Aspect=0)
         output <- merge(input, data.table(fbp(input)), by=c('ID'))[,ID:=NULL]
-        return (output[,c('FuelType', 'FFMC', 'ROS')])
+        return (output)
     }
     
     makeFuels <- function()
@@ -55,15 +55,16 @@ shinyServer(function(input, output, session) {
     }
     
     output$distPlot <- renderPlot({
-        c1 <- makeData("C-1")
-        plot(c1$ROS ~ c1$FFMC, type='l', col=1)
+        c1 <- makeData("C-1")[,c('FuelType', 'FFMC', 'ROS')]
+        plot(c1$ROS ~ c1$FFMC, type='l', col=1, xlab="FFMC", ylab="Rate of Spread (m/min)")
         col = 2
         for (fuel in c("C-2", "C-3", "C-4", "C-5", "C-6", "C-7"))
         {
-            f <- makeData(fuel)
+            f <- makeData(fuel)[,c('FuelType', 'FFMC', 'ROS')]
             lines(f$ROS ~ f$FFMC, type='l', col=col)
             col <- col + 1
         }
+        legend(0, legend=seq(1, col))
     })
     
     # Filter data based on selections

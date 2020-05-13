@@ -15,7 +15,7 @@ library(ggplot2)
 # Define UI for application that draws a histogram
 shinyUI(
     dashboardPage(
-        dashboardHeader(title='Old Faithful'),
+        dashboardHeader(title='FBP Visualizer'),
         dashboardSidebar(
             sidebarMenu(
               menuItem("ROS", tabName="ros")  
