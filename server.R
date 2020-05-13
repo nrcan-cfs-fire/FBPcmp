@@ -99,11 +99,11 @@ shinyServer(function(input, output, session) {
     })
     
     output$sfcPlot <- renderPlot({
-        makePlot('SFC', "Surface FUel Consumption (kg/m^2)", 'TFC')
+        makePlot('SFC', "Surface Fuel Consumption (kg/m^2)", 'TFC')
     })
     
     output$tfcPlot <- renderPlot({
-        makePlot('TFC', "Total FUel Consumption (kg/m^2)")
+        makePlot('TFC', "Total Fuel Consumption (kg/m^2)")
     })
     
     # Filter data based on selections
