@@ -10,7 +10,6 @@
 library(shiny)
 library(shinydashboard)
 library(shinyjs)
-library(ggplot2)
 
 # Define UI for application that draws a histogram
 shinyUI(
