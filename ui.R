@@ -20,12 +20,52 @@ shinyUI(dashboardPage(
         shinyjs::useShinyjs(),
         sidebarMenu(
             id = 'sidebarmenu',
+            menuItem("Wind Speed", tabName = "windTab"),
             menuItem("FFMC", tabName = "ffmcTab"),
             menuItem("BUI", tabName = "buiTab")
         ),
         dateInput("date", label = "Date"),
         checkboxGroupInput("fuels", "Fuels", choices = ALL_FUELS, selected =
                                ALL_FUELS),
+        conditionalPanel(
+            "input.sidebarmenu=='windTab'",
+            numericInput(
+                "windFFMC",
+                "FFMC",
+                value = 90,
+                min = 0,
+                max = 101,
+                step = 0.1
+            ),
+            sliderInput(
+                "windRange",
+                "Wind Speed",
+                value = c(0, 100),
+                min = 0,
+                max = 100
+            ),
+            numericInput(
+                "windDMC",
+                "DMC",
+                value = 20,
+                min = 0,
+                step = 1
+            ),
+            numericInput(
+                "windDC",
+                "DC",
+                value = 200,
+                min = 0,
+                step = 1
+            ),
+            disabled(numericInput(
+                "windBUI",
+                "BUI",
+                value = 80,
+                min = 0,
+                step = 1
+            )),
+        ),
         conditionalPanel(
             "input.sidebarmenu=='ffmcTab'",
             sliderInput(
@@ -100,6 +140,31 @@ shinyUI(dashboardPage(
         )
     ),
     dashboardBody(tabItems(
+        tabItem(
+            tabName = "windTab",
+            tabsetPanel(
+                tabPanel("ROS", plotOutput("windROS")),
+                tabPanel("HFI", plotOutput("windHFI")),
+                tabPanel("SFC", plotOutput("windSFC")),
+                tabPanel("TFC", plotOutput("windTFC"))
+            ),
+            column(4,
+                   selectInput(
+                       "windFuel",
+                       "Fuel:",
+                       c("All",
+                         "C-1", "C-2", "C-3", "C-4", "C-5", "C-6", "C-7")
+                   )),
+            column(4,
+                   selectInput(
+                       "windFD",
+                       "Fire Type:",
+                       c("All",
+                         "Surface", "Intermittent Crown", "Crown")
+                   )),
+            # Create a new row for the table.
+            DT::dataTableOutput("windTable")
+        ),
         tabItem(
             tabName = "ffmcTab",
             tabsetPanel(

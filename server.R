@@ -15,6 +15,19 @@ library(data.table)
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output, session) {
+    observeEvent(input$windDMC,
+                 {
+                     bui <- cffdrs:::.buiCalc(input$windDMC, input$windDC)
+                     updateNumericInput(session, "windBUI", value = bui)
+                 })
+    
+    
+    observeEvent(input$windDC,
+                 {
+                     bui <- cffdrs:::.buiCalc(input$windDMC, input$windDC)
+                     updateNumericInput(session, "windBUI", value = bui)
+                 })
+    
     observeEvent(input$ffmcDMC,
                  {
                      bui <- cffdrs:::.buiCalc(input$ffmcDMC, input$ffmcDC)
@@ -43,6 +56,30 @@ shinyServer(function(input, output, session) {
     makeData <- function(vsWhat, fuel)
     {
         dj <- as.POSIXlt(input$date)$yday
+        if ('WS' == vsWhat)
+        {
+            ffmc <- input$windFFMC
+            bui <- input$windBUI
+            ws <- input$windRange
+            rows <- seq(0, (ws[2] - ws[1]))
+            winds <- seq(ws[1], ws[2])
+            input <-
+                data.table(
+                    ID = rows,
+                    FuelType = fuel,
+                    LAT = 55,
+                    LONG = -120,
+                    FFMC = ffmc,
+                    BUI = bui,
+                    WS = winds,
+                    GS = 0,
+                    Dj = dj,
+                    Aspect = 0
+                )
+            output <-
+                merge(input, data.table(fbp(input)), by = c('ID'))[, ID := NULL]
+            return (output)
+        }
         if ('FFMC' == vsWhat)
         {
             ffmc <- input$ffmcRange
@@ -173,6 +210,37 @@ shinyServer(function(input, output, session) {
         )
     }
     
+    output$windROS <- renderPlot({
+        makePlot('WS', 'ROS', "Rate of Spread (m/min)")
+    })
+    
+    output$windHFI <- renderPlot({
+        makePlot('WS', 'HFI', "Head Fire Intensity (kW/m)")
+    })
+    
+    output$windSFC <- renderPlot({
+        makePlot('WS',
+                 'SFC',
+                 "Surface Fuel Consumption (kg/m^2)",
+                 'TFC')
+    })
+    
+    output$windTFC <- renderPlot({
+        makePlot('WS', 'TFC', "Total Fuel Consumption (kg/m^2)")
+    })
+    
+    # Filter data based on selections
+    output$windTable <- DT::renderDataTable(DT::datatable({
+        data <- makeFuels('WS')
+        if (input$windFuel != "All") {
+            data <- data[data$FuelType == input$windFuel,]
+        }
+        if (input$windFD != "All") {
+            data <- data[data$FD == substr(input$windFD[1], 1, 1),]
+        }
+        data
+    }))
+    
     output$ffmcROS <- renderPlot({
         makePlot('FFMC', 'ROS', "Rate of Spread (m/min)")
     })
@@ -196,10 +264,10 @@ shinyServer(function(input, output, session) {
     output$ffmcTable <- DT::renderDataTable(DT::datatable({
         data <- makeFuels('FFMC')
         if (input$ffmcFuel != "All") {
-            data <- data[data$FuelType == input$ffmcFuel, ]
+            data <- data[data$FuelType == input$ffmcFuel,]
         }
         if (input$ffmcFD != "All") {
-            data <- data[data$FD == substr(input$ffmcFD[1], 1, 1), ]
+            data <- data[data$FD == substr(input$ffmcFD[1], 1, 1),]
         }
         data
     }))
@@ -227,10 +295,10 @@ shinyServer(function(input, output, session) {
     output$buiTable <- DT::renderDataTable(DT::datatable({
         data <- makeFuels('BUI')
         if (input$buiFuel != "All") {
-            data <- data[data$FuelType == input$buiFuel, ]
+            data <- data[data$FuelType == input$buiFuel,]
         }
         if (input$buiFD != "All") {
-            data <- data[data$FD == substr(input$buiFD[1], 1, 1), ]
+            data <- data[data$FD == substr(input$buiFD[1], 1, 1),]
         }
         data
     }))
