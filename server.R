@@ -17,7 +17,7 @@ shinyServer(function(input, output, session) {
     observeEvent(input$dmc,
                  {
                      bui <- cffdrs:::.buiCalc(input$dmc, input$dc)
-                     updateNumericInput(session, "bui", value=bui)
+                     updateNumericInput(session, "bui", value = bui)
                      disable("bui")
                  })
     
@@ -25,20 +25,33 @@ shinyServer(function(input, output, session) {
     observeEvent(input$dc,
                  {
                      bui <- cffdrs:::.buiCalc(input$dmc, input$dc)
-                     updateNumericInput(session, "bui", value=bui)
+                     updateNumericInput(session, "bui", value = bui)
                      disable("bui")
                  })
-
+    
     makeData <- function(fuel)
     {
         ffmc <- input$ffmc
         bui <- input$bui
         ws <- input$wind
         dj <- as.POSIXlt(input$date)$yday
-        rows <- seq(0,(ffmc[2] - ffmc[1]) / 0.1)
-        ffmcs <- seq(ffmc[1], ffmc[2], by=0.1)
-        input <- data.table(ID=rows, FuelType=fuel, LAT=55, LONG=-120, FFMC=ffmcs, BUI=bui, WS=ws, GS=0, Dj=dj, Aspect=0)
-        output <- merge(input, data.table(fbp(input)), by=c('ID'))[,ID:=NULL]
+        rows <- seq(0, (ffmc[2] - ffmc[1]) / 0.1)
+        ffmcs <- seq(ffmc[1], ffmc[2], by = 0.1)
+        input <-
+            data.table(
+                ID = rows,
+                FuelType = fuel,
+                LAT = 55,
+                LONG = -120,
+                FFMC = ffmcs,
+                BUI = bui,
+                WS = ws,
+                GS = 0,
+                Dj = dj,
+                Aspect = 0
+            )
+        output <-
+            merge(input, data.table(fbp(input)), by = c('ID'))[, ID := NULL]
         return (output)
     }
     
@@ -60,7 +73,7 @@ shinyServer(function(input, output, session) {
         return (r)
     }
     
-    makePlot <- function(vsWhat, forWhat, ylab, ylim=NULL)
+    makePlot <- function(vsWhat, forWhat, ylab, ylim = NULL)
     {
         fuels <- makeFuels()
         if (is.null(ylim))
@@ -75,19 +88,50 @@ shinyServer(function(input, output, session) {
             f <- fuels[fuels$FuelType == fuel, ..cols]
             if (1 == col)
             {
-                plot(f[[forWhat]] ~ f[[vsWhat]], ylim=c(0, maxY), type='l', col=1, lty=1, xlab=vsWhat, ylab=ylab)
+                plot(
+                    f[[forWhat]] ~ f[[vsWhat]],
+                    ylim = c(0, maxY),
+                    type = 'l',
+                    col = 1,
+                    lty = 1,
+                    xlab = vsWhat,
+                    ylab = ylab
+                )
             }
             else
             {
-                lines(f[[forWhat]] ~ f[[vsWhat]], type='l', col=col, lty=col)
+                lines(f[[forWhat]] ~ f[[vsWhat]],
+                      type = 'l',
+                      col = col,
+                      lty = col)
             }
-            f <- fuels[fuels$FuelType == fuel & fuels$FD == 'I', ..cols]
-            lines(f[[forWhat]] ~ f[[vsWhat]], type='l', col=col, lty=col, lwd=2)
-            f <- fuels[fuels$FuelType == fuel & fuels$FD == 'C', ..cols]
-            lines(f[[forWhat]] ~ f[[vsWhat]], type='l', col=col, lty=1, lwd=3)
+            f <-
+                fuels[fuels$FuelType == fuel & fuels$FD == 'I', ..cols]
+            lines(
+                f[[forWhat]] ~ f[[vsWhat]],
+                type = 'l',
+                col = col,
+                lty = col,
+                lwd = 2
+            )
+            f <-
+                fuels[fuels$FuelType == fuel & fuels$FD == 'C', ..cols]
+            lines(
+                f[[forWhat]] ~ f[[vsWhat]],
+                type = 'l',
+                col = col,
+                lty = 1,
+                lwd = 3
+            )
             col <- col + 1
         }
-        legend(input$ffmc[1], y=maxY, legend=unique(fuels$FuelType), col=seq(1, col), lty=seq(1, col))
+        legend(
+            input$ffmc[1],
+            y = maxY,
+            legend = unique(fuels$FuelType),
+            col = seq(1, col),
+            lty = seq(1, col)
+        )
     }
     
     output$rosPlot <- renderPlot({
@@ -99,7 +143,10 @@ shinyServer(function(input, output, session) {
     })
     
     output$sfcPlot <- renderPlot({
-        makePlot('FFMC', 'SFC', "Surface Fuel Consumption (kg/m^2)", 'TFC')
+        makePlot('FFMC',
+                 'SFC',
+                 "Surface Fuel Consumption (kg/m^2)",
+                 'TFC')
     })
     
     output$tfcPlot <- renderPlot({
@@ -110,10 +157,10 @@ shinyServer(function(input, output, session) {
     output$table <- DT::renderDataTable(DT::datatable({
         data <- makeFuels()
         if (input$fuel != "All") {
-            data <- data[data$FuelType == input$fuel,]
+            data <- data[data$FuelType == input$fuel, ]
         }
         if (input$fd != "All") {
-            data <- data[data$FD == substr(input$fd[1], 1, 1),]
+            data <- data[data$FD == substr(input$fd[1], 1, 1), ]
         }
         data
     }))
