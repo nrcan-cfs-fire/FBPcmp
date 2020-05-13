@@ -60,7 +60,7 @@ shinyServer(function(input, output, session) {
         return (r)
     }
     
-    output$distPlot <- renderPlot({
+    output$rosPlot <- renderPlot({
         fuels <- makeFuels()
         maxRos <- max(fuels$ROS)
         col <- 1
@@ -79,6 +79,30 @@ shinyServer(function(input, output, session) {
             lines(f$ROS ~ f$FFMC, type='l', col=col, lty=col, lwd=2)
             f <- fuels[fuels$FuelType == fuel & fuels$FD == 'C',c('FuelType', 'FFMC', 'ROS')]
             lines(f$ROS ~ f$FFMC, type='l', col=col, lty=1, lwd=3)
+            col <- col + 1
+        }
+        legend(input$ffmc[1], y=maxRos, legend=unique(fuels$FuelType), col=seq(1, col), lty=seq(1, col))
+    })
+    
+    output$hfiPlot <- renderPlot({
+        fuels <- makeFuels()
+        maxRos <- max(fuels$HFI)
+        col <- 1
+        for (fuel in unique(fuels$FuelType))
+        {
+            f <- fuels[fuels$FuelType == fuel,c('FuelType', 'FFMC', 'HFI')]
+            if (1 == col)
+            {
+                plot(f$HFI ~ f$FFMC, ylim=c(0, maxRos), type='l', col=1, lty=1, xlab="FFMC", ylab="Head Fire Intensity (kW/m)")
+            }
+            else
+            {
+                lines(f$HFI ~ f$FFMC, type='l', col=col, lty=col)
+            }
+            f <- fuels[fuels$FuelType == fuel & fuels$FD == 'I',c('FuelType', 'FFMC', 'HFI')]
+            lines(f$HFI ~ f$FFMC, type='l', col=col, lty=col, lwd=2)
+            f <- fuels[fuels$FuelType == fuel & fuels$FD == 'C',c('FuelType', 'FFMC', 'HFI')]
+            lines(f$HFI ~ f$FFMC, type='l', col=col, lty=1, lwd=3)
             col <- col + 1
         }
         legend(input$ffmc[1], y=maxRos, legend=unique(fuels$FuelType), col=seq(1, col), lty=seq(1, col))
