@@ -17,6 +17,7 @@ ALL_FUELS <- c("C-1", "C-2", "C-3", "C-4", "C-5", "C-6", "C-7")
 shinyUI(dashboardPage(
     dashboardHeader(title = 'FBP Visualizer'),
     dashboardSidebar(
+        shinyjs::useShinyjs(),
         sidebarMenu(
             id = 'sidebarmenu',
             menuItem("FFMC", tabName = "ffmcTab"),
@@ -81,13 +82,13 @@ shinyUI(dashboardPage(
                 min = 0,
                 step = 0.1
             ),
-            numericInput(
+            disabled(numericInput(
                 "buiISI",
                 "ISI",
                 value = 10,
                 min = 0,
                 step = 0.1
-            ),
+            )),
             sliderInput(
                 "buiRange",
                 "BUI",

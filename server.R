@@ -196,10 +196,10 @@ shinyServer(function(input, output, session) {
     output$ffmcTable <- DT::renderDataTable(DT::datatable({
         data <- makeFuels('FFMC')
         if (input$ffmcFuel != "All") {
-            data <- data[data$FuelType == input$ffmcFuel,]
+            data <- data[data$FuelType == input$ffmcFuel, ]
         }
         if (input$ffmcFD != "All") {
-            data <- data[data$FD == substr(input$ffmcFD[1], 1, 1),]
+            data <- data[data$FD == substr(input$ffmcFD[1], 1, 1), ]
         }
         data
     }))
@@ -227,10 +227,10 @@ shinyServer(function(input, output, session) {
     output$buiTable <- DT::renderDataTable(DT::datatable({
         data <- makeFuels('BUI')
         if (input$buiFuel != "All") {
-            data <- data[data$FuelType == input$buiFuel,]
+            data <- data[data$FuelType == input$buiFuel, ]
         }
         if (input$buiFD != "All") {
-            data <- data[data$FD == substr(input$buiFD[1], 1, 1),]
+            data <- data[data$FD == substr(input$buiFD[1], 1, 1), ]
         }
         data
     }))
