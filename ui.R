@@ -19,28 +19,16 @@ shinyUI(
               menuItem("ROS", tabName="ros")  
             ),
             dateInput("date", label="Date"),
-            numericInput("ffmc", "FFMC", value=80, min=0, max=101, step=0.1),
-            numericInput("wind", "Wind Speed", value=10, min=0, step=0.1),
+            sliderInput("ffmc", "FFMC", value=c(0, 101), min=0, max=101, step=0.1),
+            numericInput("wind", "Wind Speed", value=20, min=0, step=0.1),
             numericInput("dmc", "DMC", value=20, min=0, step=1),
             numericInput("dc", "DC", value=200, min=0, step=1),
-            disabled(numericInput("isi", "ISI", value=10, min=0, step=0.1)),
-            disabled(numericInput("bui", "BUI", value=80, min=0, step=1)),
-            disabled(numericInput("fwi", "FWI", value=10, min=0, step=0.1)),
-            sliderInput("bins",
-                                "Number of bins:",
-                                min = 1,
-                                max = 50,
-                                value = 30)
+            disabled(numericInput("bui", "BUI", value=80, min=0, step=1))
         ),
         dashboardBody(
             tabItems(
                 tabItem(tabName="ros",    
-                    fluidRow(
-                        # Show a plot of the generated distribution
-                        box(
-                            plotOutput("distPlot")
-                        )
-                    )
+                    plotOutput("distPlot")
                 )
             )
         )

@@ -13,54 +13,50 @@ library(cffdrs)
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output, session) {
-    observeEvent(input$ffmc,
-                 {
-                     isi <- cffdrs:::.ISIcalc(input$ffmc, input$wind)
-                     fwi <- cffdrs:::.fwiCalc(isi, input$bui)
-                     updateNumericInput(session, "isi", value=isi)
-                     updateNumericInput(session, "fwi", value=fwi)
-                     disable("isi")
-                     disable("fwi")
-                 })
-    observeEvent(input$wind,
-                 {
-                     isi <- cffdrs:::.ISIcalc(input$ffmc, input$wind)
-                     fwi <- cffdrs:::.fwiCalc(isi, input$bui)
-                     updateNumericInput(session, "isi", value=isi)
-                     updateNumericInput(session, "fwi", value=fwi)
-                     disable("isi")
-                     disable("fwi")
-                 })
-    
     observeEvent(input$dmc,
                  {
                      bui <- cffdrs:::.buiCalc(input$dmc, input$dc)
-                     fwi <- cffdrs:::.fwiCalc(input$isi, bui)
                      updateNumericInput(session, "bui", value=bui)
-                     updateNumericInput(session, "fwi", value=fwi)
                      disable("bui")
-                     disable("fwi")
                  })
     
     
     observeEvent(input$dc,
                  {
                      bui <- cffdrs:::.buiCalc(input$dmc, input$dc)
-                     fwi <- cffdrs:::.fwiCalc(input$isi, bui)
                      updateNumericInput(session, "bui", value=bui)
-                     updateNumericInput(session, "fwi", value=fwi)
                      disable("bui")
-                     disable("fwi")
                  })
 
+    makeData <- function(fuel)
+    {
+        ffmc <- input$ffmc
+        bui <- input$bui
+        ws <- input$wind
+        dj <- as.POSIXlt(input$date)$yday
+        print(ffmc)
+        print(bui)
+        print(ws)
+        print(dj)
+        rows <- seq(0,(ffmc[2] - ffmc[1]) / 0.1)
+        print(length(rows))
+        ffmcs <- seq(ffmc[1], ffmc[2], by=0.1)
+        print(length(ffmcs))
+        input <- data.table(ID=rows, FuelType=fuel, LAT=55, LONG=-120, FFMC=ffmcs, BUI=bui, WS=ws, GS=0, Dj=dj, Aspect=0)
+        output <- merge(input, data.table(fbp(input)), by=c('ID'))[,ID:=NULL]
+        return (output[,c('FuelType', 'FFMC', 'ROS')])
+    }
+    
     output$distPlot <- renderPlot({
-        # generate bins based on input$bins from ui.R
-        x    <- faithful[, 2]
-        bins <- seq(min(x), max(x), length.out = input$bins + 1)
-
-        # draw the histogram with the specified number of bins
-        hist(x, breaks = bins, col = 'darkgray', border = 'white')
-
+        c1 <- makeData("C-1")
+        plot(c1$ROS ~ c1$FFMC, type='l', col=1)
+        col = 2
+        for (fuel in c("C-2", "C-3", "C-4", "C-5", "C-6", "C-7"))
+        {
+            f <- makeData(fuel)
+            lines(f$ROS ~ f$FFMC, type='l', col=col)
+            col <- col + 1
+        }
     })
 
 })
