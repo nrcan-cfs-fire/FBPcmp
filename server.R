@@ -62,14 +62,14 @@ shinyServer(function(input, output, session) {
     
     output$rosPlot <- renderPlot({
         fuels <- makeFuels()
-        maxRos <- max(fuels$ROS)
+        maxY <- max(fuels$ROS)
         col <- 1
         for (fuel in unique(fuels$FuelType))
         {
             f <- fuels[fuels$FuelType == fuel,c('FuelType', 'FFMC', 'ROS')]
             if (1 == col)
             {
-                plot(f$ROS ~ f$FFMC, ylim=c(0, maxRos), type='l', col=1, lty=1, xlab="FFMC", ylab="Rate of Spread (m/min)")
+                plot(f$ROS ~ f$FFMC, ylim=c(0, maxY), type='l', col=1, lty=1, xlab="FFMC", ylab="Rate of Spread (m/min)")
             }
             else
             {
@@ -81,19 +81,19 @@ shinyServer(function(input, output, session) {
             lines(f$ROS ~ f$FFMC, type='l', col=col, lty=1, lwd=3)
             col <- col + 1
         }
-        legend(input$ffmc[1], y=maxRos, legend=unique(fuels$FuelType), col=seq(1, col), lty=seq(1, col))
+        legend(input$ffmc[1], y=maxY, legend=unique(fuels$FuelType), col=seq(1, col), lty=seq(1, col))
     })
     
     output$hfiPlot <- renderPlot({
         fuels <- makeFuels()
-        maxRos <- max(fuels$HFI)
+        maxY <- max(fuels$HFI)
         col <- 1
         for (fuel in unique(fuels$FuelType))
         {
             f <- fuels[fuels$FuelType == fuel,c('FuelType', 'FFMC', 'HFI')]
             if (1 == col)
             {
-                plot(f$HFI ~ f$FFMC, ylim=c(0, maxRos), type='l', col=1, lty=1, xlab="FFMC", ylab="Head Fire Intensity (kW/m)")
+                plot(f$HFI ~ f$FFMC, ylim=c(0, maxY), type='l', col=1, lty=1, xlab="FFMC", ylab="Head Fire Intensity (kW/m)")
             }
             else
             {
@@ -105,7 +105,56 @@ shinyServer(function(input, output, session) {
             lines(f$HFI ~ f$FFMC, type='l', col=col, lty=1, lwd=3)
             col <- col + 1
         }
-        legend(input$ffmc[1], y=maxRos, legend=unique(fuels$FuelType), col=seq(1, col), lty=seq(1, col))
+        legend(input$ffmc[1], y=maxY, legend=unique(fuels$FuelType), col=seq(1, col), lty=seq(1, col))
+    })
+    
+    output$sfcPlot <- renderPlot({
+        fuels <- makeFuels()
+        # use same scale as TFC so you can flip between them
+        maxY <- max(fuels$TFC)
+        col <- 1
+        for (fuel in unique(fuels$FuelType))
+        {
+            f <- fuels[fuels$FuelType == fuel,c('FuelType', 'FFMC', 'SFC')]
+            if (1 == col)
+            {
+                plot(f$SFC ~ f$FFMC, ylim=c(0, maxY), type='l', col=1, lty=1, xlab="FFMC", ylab="Surface FUel Consumption (kg/m^2)")
+            }
+            else
+            {
+                lines(f$SFC ~ f$FFMC, type='l', col=col, lty=col)
+            }
+            f <- fuels[fuels$FuelType == fuel & fuels$FD == 'I',c('FuelType', 'FFMC', 'SFC')]
+            lines(f$SFC ~ f$FFMC, type='l', col=col, lty=col, lwd=2)
+            f <- fuels[fuels$FuelType == fuel & fuels$FD == 'C',c('FuelType', 'FFMC', 'SFC')]
+            lines(f$SFC ~ f$FFMC, type='l', col=col, lty=1, lwd=3)
+            col <- col + 1
+        }
+        legend(input$ffmc[1], y=maxY, legend=unique(fuels$FuelType), col=seq(1, col), lty=seq(1, col))
+    })
+    
+    output$tfcPlot <- renderPlot({
+        fuels <- makeFuels()
+        maxY <- max(fuels$TFC)
+        col <- 1
+        for (fuel in unique(fuels$FuelType))
+        {
+            f <- fuels[fuels$FuelType == fuel,c('FuelType', 'FFMC', 'TFC')]
+            if (1 == col)
+            {
+                plot(f$TFC ~ f$FFMC, ylim=c(0, maxY), type='l', col=1, lty=1, xlab="FFMC", ylab="Total FUel Consumption (kg/m^2)")
+            }
+            else
+            {
+                lines(f$TFC ~ f$FFMC, type='l', col=col, lty=col)
+            }
+            f <- fuels[fuels$FuelType == fuel & fuels$FD == 'I',c('FuelType', 'FFMC', 'TFC')]
+            lines(f$TFC ~ f$FFMC, type='l', col=col, lty=col, lwd=2)
+            f <- fuels[fuels$FuelType == fuel & fuels$FD == 'C',c('FuelType', 'FFMC', 'TFC')]
+            lines(f$TFC ~ f$FFMC, type='l', col=col, lty=1, lwd=3)
+            col <- col + 1
+        }
+        legend(input$ffmc[1], y=maxY, legend=unique(fuels$FuelType), col=seq(1, col), lty=seq(1, col))
     })
     
     # Filter data based on selections

@@ -29,7 +29,10 @@ shinyUI(
         dashboardBody(
             tabsetPanel(
                     tabPanel("ROS", plotOutput("rosPlot")),
-                    tabPanel("HFI", plotOutput("hfiPlot"))            ),
+                    tabPanel("HFI", plotOutput("hfiPlot")),
+                    tabPanel("SFC", plotOutput("sfcPlot")),
+                    tabPanel("TFC", plotOutput("tfcPlot"))
+            ),
             column(4,
                    selectInput("fuel",
                                "Fuel:",
