@@ -15,26 +15,13 @@ library(data.table)
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output, session) {
-    observeEvent(input$dmc,
+    observeEvent(input$dmc | input$dc,
                  {
                      bui <- cffdrs:::.buiCalc(input$dmc, input$dc)
                      updateNumericInput(session, "bui", value = bui)
                  })
     
-    
-    observeEvent(input$dc,
-                 {
-                     bui <- cffdrs:::.buiCalc(input$dmc, input$dc)
-                     updateNumericInput(session, "bui", value = bui)
-                 })
-    
-    observeEvent(input$ffmc,
-                 {
-                     isi <- cffdrs:::.ISIcalc(input$ffmc, input$wind)
-                     updateNumericInput(session, "buiISI", value = isi)
-                 })
-    
-    observeEvent(input$wind,
+    observeEvent(input$ffmc | input$wind,
                  {
                      isi <- cffdrs:::.ISIcalc(input$ffmc, input$wind)
                      updateNumericInput(session, "buiISI", value = isi)
