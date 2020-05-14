@@ -133,8 +133,9 @@ shinyServer(function(input, output, session) {
         return (r)
     }
     
-    makePlot <- function(vsWhat, forWhat, ylab, ylim = NULL)
+    makePlot <- function(forWhat, ylab, ylim = NULL)
     {
+        vsWhat <- getFor()
         fuels <- makeFuels(vsWhat)
         if (is.null(ylim))
         {
@@ -214,32 +215,29 @@ shinyServer(function(input, output, session) {
     }
     
     output$plotROS <- renderPlot({
-        makePlot(getFor(), 'ROS', "Rate of Spread (m/min)")
+        makePlot('ROS', "Rate of Spread (m/min)")
     })
     
     output$plotHFI <- renderPlot({
-        makePlot(getFor(), 'HFI', "Head Fire Intensity (kW/m)")
+        makePlot('HFI', "Head Fire Intensity (kW/m)")
     })
     
     output$plotSFC <- renderPlot({
-        makePlot(getFor(),
-                 'SFC',
-                 "Surface Fuel Consumption (kg/m^2)",
-                 'TFC')
+        makePlot('SFC', "Surface Fuel Consumption (kg/m^2)", 'TFC')
     })
     
     output$plotTFC <- renderPlot({
-        makePlot(getFor(), 'TFC', "Total Fuel Consumption (kg/m^2)")
+        makePlot('TFC', "Total Fuel Consumption (kg/m^2)")
     })
     
     # Filter data based on selections
     output$table <- DT::renderDataTable(DT::datatable({
         data <- makeFuels(getFor())
         if (input$fuel != "All") {
-            data <- data[data$FuelType == input$fuel, ]
+            data <- data[data$FuelType == input$fuel,]
         }
         if (input$fd != "All") {
-            data <- data[data$FD == substr(input$fd[1], 1, 1), ]
+            data <- data[data$FD == substr(input$fd[1], 1, 1),]
         }
         data
     }))
