@@ -109,8 +109,9 @@ shinyServer(function(input, output, session) {
         
     }
     
-    makeFuels <- function(vsWhat)
+    makeFuels <- function()
     {
+        vsWhat <- getFor()
         forFuels = c(input$conifer, input$deciduous, input$slash)
         for (f in input$m1)
         {
@@ -144,7 +145,7 @@ shinyServer(function(input, output, session) {
     makePlot <- function(forWhat, ylab, ylim = NULL)
     {
         vsWhat <- getFor()
-        fuels <- makeFuels(vsWhat)
+        fuels <- makeFuels()
         if (is.null(ylim))
         {
             ylim <- forWhat
@@ -232,7 +233,7 @@ shinyServer(function(input, output, session) {
     
     # Filter data based on selections
     output$table <- DT::renderDataTable(DT::datatable({
-        data <- makeFuels(getFor())[, FullFuel := NULL]
+        data <- makeFuels()[, FullFuel := NULL]
         if (input$fuel != "All") {
             data <- data[data$FuelType == input$fuel,]
         }
