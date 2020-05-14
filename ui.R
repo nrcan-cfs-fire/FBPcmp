@@ -11,8 +11,9 @@ library(shiny)
 library(shinydashboard)
 library(shinyjs)
 
-CONIFER_FUELS <- c("C-1", "C-2", "C-3", "C-4", "C-5", "C-6", "C-7")
-SLASH_FUELS <- c('S-1', 'S-2', 'S-3')
+CONIFER_FUELS <- c("C1", "C2", "C3", "C4", "C5", "C6", "C7")
+SLASH_FUELS <- c('S1', 'S2', 'S3')
+MIXED_PERCENT <- c('25', '50', '75')
 ALL_FUELS <- c(CONIFER_FUELS, SLASH_FUELS)
 
 # Define UI for application that draws a histogram
@@ -32,14 +33,26 @@ shinyUI(dashboardPage(
         ),
         dateInput("date", label = "Date"),
         splitLayout(
+            column(width=2,
             checkboxGroupInput("conifer",
                                "Conifer",
                                choices = CONIFER_FUELS,
-                               selected = CONIFER_FUELS),
+                               selected = CONIFER_FUELS)),
+            column(width=2,
             checkboxGroupInput("slash",
                                "Slash",
                                choices = SLASH_FUELS,
-                               selected = SLASH_FUELS)
+                               selected = SLASH_FUELS),
+            ),
+            column(width=2,
+                checkboxGroupInput("m1",
+                               "M1",
+                               choices = MIXED_PERCENT,
+                               selected = MIXED_PERCENT),
+            checkboxGroupInput("m2",
+                               "M2",
+                               choices = MIXED_PERCENT,
+                               selected = MIXED_PERCENT))
         ),
         conditionalPanel(
             "input.sidebarmenu=='BUI'|| input.sidebarmenu=='WS'",

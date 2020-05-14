@@ -51,10 +51,13 @@ shinyServer(function(input, output, session) {
             rows <- seq(0, (bui[2] - bui[1]))
             bui <- seq(bui[1], bui[2])
         }
+        mainFuel <- substr(fuel, 1, 2)
+        pc <- substr(fuel, 3, 4)
         input <-
             data.table(
                 ID = rows,
-                FuelType = fuel,
+                FullFuel = fuel,
+                FuelType = mainFuel,
                 LAT = input$lat,
                 LONG = input$lon,
                 FFMC = ffmc,
@@ -62,6 +65,7 @@ shinyServer(function(input, output, session) {
                 WS = ws,
                 GS = 0,
                 Dj = dj,
+                PC = pc,
                 Aspect = 0
             )
         output <-
@@ -73,6 +77,14 @@ shinyServer(function(input, output, session) {
     makeFuels <- function(vsWhat)
     {
         forFuels = c(input$conifer, input$slash)
+        for (f in input$m1)
+        {
+            forFuels <- append(forFuels, paste0('M1', f))
+        }
+        for (f in input$m2)
+        {
+            forFuels <- append(forFuels, paste0('M2', f))
+        }
         if (0 == length(forFuels))
         {
             return(NULL)
@@ -99,11 +111,11 @@ shinyServer(function(input, output, session) {
         }
         minX <- min(fuels[[vsWhat]])
         maxY <- max(fuels[[ylim]])
-        cols <- c('FuelType', vsWhat, forWhat)
+        cols <- c('FullFuel', vsWhat, forWhat)
         col <- 1
-        for (fuel in unique(fuels$FuelType))
+        for (fuel in unique(fuels$FullFuel))
         {
-            f <- fuels[fuels$FuelType == fuel, ..cols]
+            f <- fuels[fuels$FullFuel == fuel, ..cols]
             if (1 == col)
             {
                 plot(
@@ -124,7 +136,7 @@ shinyServer(function(input, output, session) {
                       lty = col)
             }
             f <-
-                fuels[fuels$FuelType == fuel &
+                fuels[fuels$FullFuel == fuel &
                           fuels$FD == 'I', ..cols]
             lines(
                 f[[forWhat]] ~ f[[vsWhat]],
@@ -134,7 +146,7 @@ shinyServer(function(input, output, session) {
                 lwd = 2
             )
             f <-
-                fuels[fuels$FuelType == fuel &
+                fuels[fuels$FullFuel == fuel &
                           fuels$FD == 'C', ..cols]
             lines(
                 f[[forWhat]] ~ f[[vsWhat]],
@@ -148,7 +160,8 @@ shinyServer(function(input, output, session) {
         legend(
             minX,
             y = maxY,
-            legend = unique(fuels$FuelType),
+            legend = unique(fuels$FullFuel),
+            ncol=2,
             col = seq(1, col),
             lty = seq(1, col)
         )
