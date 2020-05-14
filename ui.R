@@ -24,6 +24,10 @@ shinyUI(dashboardPage(
             menuItem("FFMC", tabName = "ffmcTab"),
             menuItem("BUI", tabName = "buiTab")
         ),
+        splitLayout(
+            numericInput("lat", "Lat", 55),
+            numericInput("lon", "Lon", -120)
+        ),
         dateInput("date", label = "Date"),
         checkboxGroupInput("fuels", "Fuels", choices = ALL_FUELS, selected =
                                ALL_FUELS),

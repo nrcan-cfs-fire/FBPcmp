@@ -54,8 +54,8 @@ shinyServer(function(input, output, session) {
                 data.table(
                     ID = rows,
                     FuelType = fuel,
-                    LAT = 55,
-                    LONG = -120,
+                    LAT = input$lat,
+                    LONG = input$lon,
                     FFMC = ffmc,
                     BUI = bui,
                     WS = winds,
@@ -78,8 +78,8 @@ shinyServer(function(input, output, session) {
                 data.table(
                     ID = rows,
                     FuelType = fuel,
-                    LAT = 55,
-                    LONG = -120,
+                    LAT = input$lat,
+                    LONG = input$lon,
                     FFMC = ffmcs,
                     BUI = bui,
                     WS = ws,
@@ -100,8 +100,8 @@ shinyServer(function(input, output, session) {
             data.table(
                 ID = rows,
                 FuelType = fuel,
-                LAT = 55,
-                LONG = -120,
+                LAT = input$lat,
+                LONG = input$lon,
                 FFMC = ffmc,
                 BUI = buis,
                 WS = ws,
