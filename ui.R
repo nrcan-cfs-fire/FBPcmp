@@ -36,7 +36,19 @@ shinyUI(dashboardPage(
                 min = 0,
                 max = 101,
                 step = 0.1
-            )),
+            )
+        ),
+        conditionalPanel(
+            "input.sidebarmenu=='ffmcTab'",
+            sliderInput(
+                "ffmcRange",
+                "FFMC",
+                value = c(70, 101),
+                min = 0,
+                max = 101,
+                step = 0.1
+            )
+        ),
         conditionalPanel(
             "input.sidebarmenu=='windTab'",
             sliderInput(
@@ -70,14 +82,6 @@ shinyUI(dashboardPage(
         ),
         conditionalPanel(
             "input.sidebarmenu=='ffmcTab'",
-            sliderInput(
-                "ffmcRange",
-                "FFMC",
-                value = c(70, 101),
-                min = 0,
-                max = 101,
-                step = 0.1
-            ),
             numericInput(
                 "ffmcWind",
                 "Wind Speed",
