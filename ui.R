@@ -20,6 +20,13 @@ ALL_FUELS <- c(CONIFER_FUELS, SLASH_FUELS)
 shinyUI(dashboardPage(
     dashboardHeader(title = 'FBP Visualizer'),
     dashboardSidebar(
+        tags$head(tags$style(
+            HTML("
+          .form-group {
+            margin-bottom: 0 !important;
+          }
+        ")
+        )),
         shinyjs::useShinyjs(),
         sidebarMenu(
             id = 'sidebarmenu',
@@ -33,26 +40,31 @@ shinyUI(dashboardPage(
         ),
         dateInput("date", label = "Date"),
         splitLayout(
-            column(width=2,
-            checkboxGroupInput("conifer",
-                               "Conifer",
-                               choices = CONIFER_FUELS,
-                               selected = CONIFER_FUELS)),
-            column(width=2,
-            checkboxGroupInput("slash",
-                               "Slash",
-                               choices = SLASH_FUELS,
-                               selected = SLASH_FUELS),
+            column(
+                width = 2,
+                checkboxGroupInput("conifer",
+                                   "Conifer",
+                                   choices = CONIFER_FUELS,
+                                   selected = CONIFER_FUELS)
             ),
-            column(width=2,
+            column(
+                width = 2,
+                checkboxGroupInput("slash",
+                                   "Slash",
+                                   choices = SLASH_FUELS,
+                                   selected = SLASH_FUELS),
+            ),
+            column(
+                width = 2,
                 checkboxGroupInput("m1",
-                               "M1",
-                               choices = MIXED_PERCENT,
-                               selected = MIXED_PERCENT),
-            checkboxGroupInput("m2",
-                               "M2",
-                               choices = MIXED_PERCENT,
-                               selected = MIXED_PERCENT))
+                                   "M1",
+                                   choices = MIXED_PERCENT,
+                                   selected = MIXED_PERCENT),
+                checkboxGroupInput("m2",
+                                   "M2",
+                                   choices = MIXED_PERCENT,
+                                   selected = MIXED_PERCENT)
+            )
         ),
         conditionalPanel(
             "input.sidebarmenu=='BUI'|| input.sidebarmenu=='WS'",

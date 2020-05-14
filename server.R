@@ -165,7 +165,7 @@ shinyServer(function(input, output, session) {
             minX,
             y = maxY,
             legend = unique(fuels$FullFuel),
-            ncol=2,
+            ncol = 2,
             col = seq(1, col),
             lty = seq(1, col)
         )
