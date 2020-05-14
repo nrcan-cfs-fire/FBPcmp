@@ -72,16 +72,17 @@ shinyServer(function(input, output, session) {
     
     makeFuels <- function(vsWhat)
     {
-        if (0 == length(input$fuels))
+        forFuels = c(input$conifer, input$slash)
+        if (0 == length(forFuels))
         {
             return(NULL)
         }
-        r <- makeData(vsWhat, input$fuels[1])
-        if (1 < length(input$fuels))
+        r <- makeData(vsWhat, forFuels[1])
+        if (1 < length(forFuels))
         {
-            for (fuel in seq(2, length(input$fuels)))
+            for (fuel in seq(2, length(forFuels)))
             {
-                f <- makeData(vsWhat, input$fuels[fuel])
+                f <- makeData(vsWhat, forFuels[fuel])
                 r <- rbind(r, f)
             }
         }
