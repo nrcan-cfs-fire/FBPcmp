@@ -142,10 +142,12 @@ shinyServer(function(input, output, session) {
         return (r)
     }
     
+    fuelData <- reactive(makeFuels())
+
     makePlot <- function(forWhat, ylab, ylim = NULL)
     {
         vsWhat <- getFor()
-        fuels <- makeFuels()
+        fuels <- fuelData()
         if (is.null(ylim))
         {
             ylim <- forWhat
@@ -233,7 +235,7 @@ shinyServer(function(input, output, session) {
     
     # Filter data based on selections
     output$table <- DT::renderDataTable(DT::datatable({
-        data <- makeFuels()[, FullFuel := NULL]
+        data <- fuelData()[, FullFuel := NULL]
         if (input$fuel != "All") {
             data <- data[data$FuelType == input$fuel,]
         }
