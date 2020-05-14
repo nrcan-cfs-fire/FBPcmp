@@ -20,9 +20,9 @@ shinyUI(dashboardPage(
         shinyjs::useShinyjs(),
         sidebarMenu(
             id = 'sidebarmenu',
-            menuItem("Wind Speed", tabName = "windTab"),
-            menuItem("FFMC", tabName = "ffmcTab"),
-            menuItem("BUI", tabName = "buiTab")
+            menuItem("Wind Speed", tabName = "WS"),
+            menuItem("FFMC", tabName = "FFMC"),
+            menuItem("BUI", tabName = "BUI")
         ),
         splitLayout(
             numericInput("lat", "Lat", 55),
@@ -32,7 +32,7 @@ shinyUI(dashboardPage(
         checkboxGroupInput("fuels", "Fuels", choices = ALL_FUELS, selected =
                                ALL_FUELS),
         conditionalPanel(
-            "input.sidebarmenu=='buiTab'|| input.sidebarmenu=='windTab'",
+            "input.sidebarmenu=='BUI'|| input.sidebarmenu=='WS'",
             sliderInput(
                 "ffmc",
                 "FFMC",
@@ -43,7 +43,7 @@ shinyUI(dashboardPage(
             )
         ),
         conditionalPanel(
-            "input.sidebarmenu=='ffmcTab'",
+            "input.sidebarmenu=='FFMC'",
             sliderInput(
                 "ffmcRange",
                 "FFMC",
@@ -54,7 +54,7 @@ shinyUI(dashboardPage(
             )
         ),
         conditionalPanel(
-            "input.sidebarmenu=='windTab'",
+            "input.sidebarmenu=='WS'",
             sliderInput(
                 "windRange",
                 "Wind Speed",
@@ -65,7 +65,7 @@ shinyUI(dashboardPage(
         ),
         splitLayout(
             conditionalPanel(
-                "input.sidebarmenu=='ffmcTab' || input.sidebarmenu=='buiTab'",
+                "input.sidebarmenu=='FFMC' || input.sidebarmenu=='BUI'",
                 numericInput(
                     "wind",
                     "Wind Speed",
@@ -74,7 +74,7 @@ shinyUI(dashboardPage(
                     step = 0.1
                 )
             ),
-            conditionalPanel("input.sidebarmenu=='buiTab'",
+            conditionalPanel("input.sidebarmenu=='BUI'",
                              disabled(
                                  numericInput(
                                      "buiISI",
@@ -86,7 +86,7 @@ shinyUI(dashboardPage(
                              ))
         ),
         conditionalPanel(
-            "input.sidebarmenu=='windTab' || input.sidebarmenu=='ffmcTab'",
+            "input.sidebarmenu=='WS' || input.sidebarmenu=='FFMC'",
             splitLayout(
                 numericInput(
                     "dmc",
@@ -112,7 +112,7 @@ shinyUI(dashboardPage(
             )),
         ),
         conditionalPanel(
-            "input.sidebarmenu=='buiTab'",
+            "input.sidebarmenu=='BUI'",
             sliderInput(
                 "buiRange",
                 "BUI",

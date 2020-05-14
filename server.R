@@ -200,18 +200,7 @@ shinyServer(function(input, output, session) {
     
     getFor <- function()
     {
-        if ('windTab' == input$sidebarmenu)
-        {
-            return('WS')
-        }
-        if ('ffmcTab' == input$sidebarmenu)
-        {
-            return('FFMC')
-        }
-        if ('buiTab' == input$sidebarmenu)
-        {
-            return('BUI')
-        }
+        return(input$sidebarmenu)
     }
     
     output$plotROS <- renderPlot({
