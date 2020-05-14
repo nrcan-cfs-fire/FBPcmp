@@ -13,12 +13,14 @@ library(cffdrs)
 library(data.table)
 
 CONIFER_FUELS <- c("C1", "C2", "C3", "C4", "C5", "C6", "C7")
+DECIDUOUS_FUELS <- c("D1")
 SLASH_FUELS <- c('S1', 'S2', 'S3')
 MIXED_PERCENT <- c('25', '50', '75')
 DEAD_PERCENT <- c('30', '60', '100')
 ALL_FUELS <-
     c(
         CONIFER_FUELS,
+        DECIDUOUS_FUELS,
         SLASH_FUELS,
         'M125',
         'M150',
@@ -108,7 +110,7 @@ shinyServer(function(input, output, session) {
     
     makeFuels <- function(vsWhat)
     {
-        forFuels = c(input$conifer, input$slash)
+        forFuels = c(input$conifer, input$deciduous, input$slash)
         for (f in input$m1)
         {
             forFuels <- append(forFuels, paste0('M1', f))
