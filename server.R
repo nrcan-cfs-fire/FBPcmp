@@ -12,6 +12,19 @@ library(shinyjs)
 library(cffdrs)
 library(data.table)
 
+CONIFER_FUELS <- c("C1", "C2", "C3", "C4", "C5", "C6", "C7")
+SLASH_FUELS <- c('S1', 'S2', 'S3')
+MIXED_PERCENT <- c('25', '50', '75')
+ALL_FUELS <-
+    c(CONIFER_FUELS,
+      SLASH_FUELS,
+      'M125',
+      'M150',
+      'M175',
+      'M225',
+      'M250',
+      'M275')
+
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output, session) {
@@ -120,14 +133,15 @@ shinyServer(function(input, output, session) {
         for (fuel in unique(fuels$FullFuel))
         {
             f <- fuels[fuels$FullFuel == fuel, ..cols]
+            by_index = match(fuel, ALL_FUELS)
             if (1 == col)
             {
                 plot(
                     f[[forWhat]] ~ f[[vsWhat]],
                     ylim = c(0, maxY),
                     type = 'l',
-                    col = 1,
-                    lty = 1,
+                    col = by_index,
+                    lty = by_index,
                     xlab = vsWhat,
                     ylab = ylab
                 )
@@ -136,8 +150,8 @@ shinyServer(function(input, output, session) {
             {
                 lines(f[[forWhat]] ~ f[[vsWhat]],
                       type = 'l',
-                      col = col,
-                      lty = col)
+                      col = by_index,
+                      lty = by_index)
             }
             f <-
                 fuels[fuels$FullFuel == fuel &
@@ -145,8 +159,8 @@ shinyServer(function(input, output, session) {
             lines(
                 f[[forWhat]] ~ f[[vsWhat]],
                 type = 'l',
-                col = col,
-                lty = col,
+                col = by_index,
+                lty = by_index,
                 lwd = 2
             )
             f <-
@@ -155,19 +169,20 @@ shinyServer(function(input, output, session) {
             lines(
                 f[[forWhat]] ~ f[[vsWhat]],
                 type = 'l',
-                col = col,
+                col = by_index,
                 lty = 1,
                 lwd = 3
             )
             col <- col + 1
         }
+        all_index = match(unique(fuels$FullFuel), ALL_FUELS)
         legend(
             minX,
             y = maxY,
             legend = unique(fuels$FullFuel),
             ncol = 2,
-            col = seq(1, col),
-            lty = seq(1, col)
+            col = all_index,
+            lty = all_index
         )
     }
     
