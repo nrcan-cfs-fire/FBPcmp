@@ -52,7 +52,11 @@ shinyServer(function(input, output, session) {
             bui <- seq(bui[1], bui[2])
         }
         mainFuel <- substr(fuel, 1, 2)
-        pc <- substr(fuel, 3, 4)
+        pc <- ''
+        if ('M1' == mainFuel)
+        {
+            pc <- substr(fuel, 3, 4)
+        }
         input <-
             data.table(
                 ID = rows,
@@ -190,7 +194,7 @@ shinyServer(function(input, output, session) {
     
     # Filter data based on selections
     output$table <- DT::renderDataTable(DT::datatable({
-        data <- makeFuels(getFor())
+        data <- makeFuels(getFor())[, FullFuel := NULL]
         if (input$fuel != "All") {
             data <- data[data$FuelType == input$fuel,]
         }
