@@ -28,15 +28,17 @@ shinyUI(dashboardPage(
         checkboxGroupInput("fuels", "Fuels", choices = ALL_FUELS, selected =
                                ALL_FUELS),
         conditionalPanel(
-            "input.sidebarmenu=='windTab'",
+            "input.sidebarmenu=='buiTab'|| input.sidebarmenu=='windTab'",
             sliderInput(
-                "windFFMC",
+                "ffmc",
                 "FFMC",
                 value = 90,
                 min = 0,
                 max = 101,
                 step = 0.1
-            ),
+            )),
+        conditionalPanel(
+            "input.sidebarmenu=='windTab'",
             sliderInput(
                 "windRange",
                 "Wind Speed",
@@ -107,14 +109,6 @@ shinyUI(dashboardPage(
         ),
         conditionalPanel(
             "input.sidebarmenu=='buiTab'",
-            numericInput(
-                "buiFFMC",
-                "FFMC",
-                value = 80,
-                min = 0,
-                max = 101,
-                step = 0.1
-            ),
             numericInput(
                 "buiWind",
                 "Wind Speed",

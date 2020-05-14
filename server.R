@@ -41,15 +41,15 @@ shinyServer(function(input, output, session) {
                      updateNumericInput(session, "ffmcBUI", value = bui)
                  })
     
-    observeEvent(input$buiFFMC,
+    observeEvent(input$ffmc,
                  {
-                     isi <- cffdrs:::.ISIcalc(input$buiFFMC, input$buiWind)
+                     isi <- cffdrs:::.ISIcalc(input$ffmc, input$buiWind)
                      updateNumericInput(session, "buiISI", value = isi)
                  })
     
     observeEvent(input$buiWind,
                  {
-                     isi <- cffdrs:::.ISIcalc(input$buiFFMC, input$buiWind)
+                     isi <- cffdrs:::.ISIcalc(input$ffmc, input$buiWind)
                      updateNumericInput(session, "buiISI", value = isi)
                  })
     
@@ -58,7 +58,7 @@ shinyServer(function(input, output, session) {
         dj <- as.POSIXlt(input$date)$yday
         if ('WS' == vsWhat)
         {
-            ffmc <- input$windFFMC
+            ffmc <- input$ffmc
             bui <- input$windBUI
             ws <- input$windRange
             rows <- seq(0, (ws[2] - ws[1]))
@@ -104,7 +104,7 @@ shinyServer(function(input, output, session) {
                 merge(input, data.table(fbp(input)), by = c('ID'))[, ID := NULL]
             return (output)
         }
-        ffmc <- input$buiFFMC
+        ffmc <- input$ffmc
         bui <- input$buiRange
         ws <- input$buiWind
         rows <- seq(0, (bui[2] - bui[1]))
