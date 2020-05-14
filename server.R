@@ -11,6 +11,7 @@ library(shiny)
 library(shinyjs)
 library(cffdrs)
 library(data.table)
+library(parallel)
 
 CONIFER_FUELS <- c("C1", "C2", "C3", "C4", "C5", "C6", "C7")
 DECIDUOUS_FUELS <- c("D1")
@@ -131,15 +132,12 @@ shinyServer(function(input, output, session) {
         {
             return(NULL)
         }
-        r <- makeData(vsWhat, forFuels[1])
-        if (1 < length(forFuels))
+        fct <- function(fuel)
         {
-            for (fuel in seq(2, length(forFuels)))
-            {
-                f <- makeData(vsWhat, forFuels[fuel])
-                r <- rbind(r, f)
-            }
+            return (makeData(vsWhat, fuel))
         }
+        r <- lapply(forFuels, fct)
+        r <- rbindlist(r)
         return (r)
     }
     
