@@ -59,31 +59,45 @@ shinyUI(dashboardPage(
                 max = 100
             )
         ),
-        conditionalPanel(
-            "input.sidebarmenu=='ffmcTab' || input.sidebarmenu=='buiTab'",
-            numericInput(
-                "wind",
-                "Wind Speed",
-                value = 20,
-                min = 0,
-                step = 0.1
-            )
+        splitLayout(
+            conditionalPanel(
+                "input.sidebarmenu=='ffmcTab' || input.sidebarmenu=='buiTab'",
+                numericInput(
+                    "wind",
+                    "Wind Speed",
+                    value = 20,
+                    min = 0,
+                    step = 0.1
+                )
+            ),
+            conditionalPanel("input.sidebarmenu=='buiTab'",
+                             disabled(
+                                 numericInput(
+                                     "buiISI",
+                                     "ISI",
+                                     value = 10,
+                                     min = 0,
+                                     step = 0.1
+                                 )
+                             ))
         ),
         conditionalPanel(
             "input.sidebarmenu=='windTab' || input.sidebarmenu=='ffmcTab'",
-            numericInput(
-                "dmc",
-                "DMC",
-                value = 20,
-                min = 0,
-                step = 1
-            ),
-            numericInput(
-                "dc",
-                "DC",
-                value = 200,
-                min = 0,
-                step = 1
+            splitLayout(
+                numericInput(
+                    "dmc",
+                    "DMC",
+                    value = 20,
+                    min = 0,
+                    step = 1
+                ),
+                numericInput(
+                    "dc",
+                    "DC",
+                    value = 200,
+                    min = 0,
+                    step = 1
+                )
             ),
             disabled(numericInput(
                 "bui",
@@ -95,13 +109,6 @@ shinyUI(dashboardPage(
         ),
         conditionalPanel(
             "input.sidebarmenu=='buiTab'",
-            disabled(numericInput(
-                "buiISI",
-                "ISI",
-                value = 10,
-                min = 0,
-                step = 0.1
-            )),
             sliderInput(
                 "buiRange",
                 "BUI",
