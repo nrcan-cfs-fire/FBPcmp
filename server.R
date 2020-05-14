@@ -52,8 +52,9 @@ shinyServer(function(input, output, session) {
                      updateNumericInput(session, "buiISI", value = isi)
                  })
     
-    makeData <- function(vsWhat, fuel)
+    makeData <- reactive(function(fuel)
     {
+        vsWhat <- input$sidebarmenu
         dj <- as.POSIXlt(input$date)$yday
         ffmc <- input$ffmc
         bui <- input$bui
@@ -106,12 +107,34 @@ shinyServer(function(input, output, session) {
         output <-
             merge(input, data.table(fbp(input)), by = c('ID'))[, ID := NULL]
         return (output)
-        
-    }
+    })
     
-    makeFuels <- function()
+    c1 <- reactive(makeData()('C1'))
+    c2 <- reactive(makeData()('C2'))
+    c3 <- reactive(makeData()('C3'))
+    c4 <- reactive(makeData()('C4'))
+    c5 <- reactive(makeData()('C5'))
+    c6 <- reactive(makeData()('C6'))
+    c7 <- reactive(makeData()('C7'))
+    d1 <- reactive(makeData()('D1'))
+    s1 <- reactive(makeData()('S1'))
+    s2 <- reactive(makeData()('S2'))
+    s3 <- reactive(makeData()('S3'))
+    m125 <- reactive(makeData()('M125'))
+    m150 <- reactive(makeData()('M150'))
+    m175 <- reactive(makeData()('M175'))
+    m225 <- reactive(makeData()('M225'))
+    m250 <- reactive(makeData()('M250'))
+    m275 <- reactive(makeData()('M275'))
+    m330 <- reactive(makeData()('M330'))
+    m360 <- reactive(makeData()('M360'))
+    m3100 <- reactive(makeData()('M3100'))
+    m430 <- reactive(makeData()('M430'))
+    m460 <- reactive(makeData()('M460'))
+    m4100 <- reactive(makeData()('M4100'))
+    
+    makeFuels <- reactive(function()
     {
-        vsWhat <- getFor()
         forFuels = c(input$conifer, input$deciduous, input$slash)
         for (f in input$m1)
         {
@@ -133,21 +156,45 @@ shinyServer(function(input, output, session) {
         {
             return(NULL)
         }
-        fct <- function(fuel)
+        r <- c1()[0,]
+        fct <- function(df, value)
         {
-            return (makeData(vsWhat, fuel))
+            if (is.element(value, forFuels))
+            {
+                r <- rbind(r, df)
+            }
+            return (r)
         }
-        r <- lapply(forFuels, fct)
-        r <- rbindlist(r)
+        r <- fct(c1(), 'C1')
+        r <- fct(c2(), 'C2')
+        r <- fct(c3(), 'C3')
+        r <- fct(c4(), 'C4')
+        r <- fct(c5(), 'C5')
+        r <- fct(c6(), 'C6')
+        r <- fct(c7(), 'C7')
+        r <- fct(d1(), 'D1')
+        r <- fct(s1(), 'S1')
+        r <- fct(s2(), 'S2')
+        r <- fct(s3(), 'S3')
+        r <- fct(m125(), 'M125')
+        r <- fct(m150(), 'M150')
+        r <- fct(m175(), 'M175')
+        r <- fct(m225(), 'M225')
+        r <- fct(m250(), 'M250')
+        r <- fct(m275(), 'M275')
+        r <- fct(m330(), 'M330')
+        r <- fct(m360(), 'M360')
+        r <- fct(m3100(), 'M3100')
+        r <- fct(m430(), 'M430')
+        r <- fct(m460(), 'M460')
+        r <- fct(m4100(), 'M4100')
         return (r)
-    }
+    })
     
-    fuelData <- reactive(makeFuels())
-
-    makePlot <- function(forWhat, ylab, ylim = NULL)
+    makePlot <- reactive(function(forWhat, ylab, ylim = NULL)
     {
-        vsWhat <- getFor()
-        fuels <- fuelData()
+        vsWhat <- input$sidebarmenu
+        fuels <- makeFuels()()
         if (is.null(ylim))
         {
             ylim <- forWhat
@@ -210,32 +257,27 @@ shinyServer(function(input, output, session) {
             col = all_index,
             lty = all_index
         )
-    }
-    
-    getFor <- function()
-    {
-        return(input$sidebarmenu)
-    }
+    })
     
     output$plotROS <- renderPlot({
-        makePlot('ROS', "Rate of Spread (m/min)")
+        makePlot()('ROS', "Rate of Spread (m/min)")
     })
     
     output$plotHFI <- renderPlot({
-        makePlot('HFI', "Head Fire Intensity (kW/m)")
+        makePlot()('HFI', "Head Fire Intensity (kW/m)")
     })
     
     output$plotSFC <- renderPlot({
-        makePlot('SFC', "Surface Fuel Consumption (kg/m^2)", 'TFC')
+        makePlot()('SFC', "Surface Fuel Consumption (kg/m^2)", 'TFC')
     })
     
     output$plotTFC <- renderPlot({
-        makePlot('TFC', "Total Fuel Consumption (kg/m^2)")
+        makePlot()('TFC', "Total Fuel Consumption (kg/m^2)")
     })
     
     # Filter data based on selections
     output$table <- DT::renderDataTable(DT::datatable({
-        data <- fuelData()[, FullFuel := NULL]
+        data <- makeFuels()()[, FullFuel := NULL]
         if (input$fuel != "All") {
             data <- data[data$FuelType == input$fuel,]
         }
