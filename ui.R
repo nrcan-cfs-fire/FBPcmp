@@ -30,11 +30,20 @@ shinyUI(dashboardPage(
     dashboardHeader(title = 'FBP Visualizer'),
     dashboardSidebar(
         tags$head(tags$style(
-            HTML("
+            HTML(
+                "
           .form-group {
             margin-bottom: 0 !important;
+            margin-top: 0 !important;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
           }
-        ")
+          .shiny-input-checkboxgroup {
+            margin: 0 !important;
+            padding: 0 !important;
+          }
+        "
+            )
         )),
         shinyjs::useShinyjs(),
         sidebarMenu(
@@ -50,7 +59,7 @@ shinyUI(dashboardPage(
         dateInput("date", label = "Date"),
         splitLayout(
             column(
-                width = 2,
+                width = 4,
                 checkboxGroupInput("conifer",
                                    "Conifer",
                                    choices = CONIFER_FUELS,
@@ -63,26 +72,26 @@ shinyUI(dashboardPage(
                 )
             ),
             column(
-                width = 2,
-                checkboxGroupInput("slash",
-                                   "Slash",
-                                   choices = SLASH_FUELS,
-                                   selected = SLASH_FUELS),
+                width = 4,
                 checkboxGroupInput("m1",
                                    "M1",
                                    choices = MIXED_PERCENT,
                                    selected = MIXED_PERCENT),
-                checkboxGroupInput("m2",
-                                   "M2",
-                                   choices = MIXED_PERCENT,
-                                   selected = MIXED_PERCENT)
-            ),
-            column(
-                width = 2,
                 checkboxGroupInput("m3",
                                    "M3",
                                    choices = DEAD_PERCENT,
                                    selected = DEAD_PERCENT),
+                checkboxGroupInput("slash",
+                                   "Slash",
+                                   choices = SLASH_FUELS,
+                                   selected = SLASH_FUELS)
+            ),
+            column(
+                width = 4,
+                checkboxGroupInput("m2",
+                                   "M2",
+                                   choices = MIXED_PERCENT,
+                                   selected = MIXED_PERCENT),
                 checkboxGroupInput("m4",
                                    "M4",
                                    choices = DEAD_PERCENT,
