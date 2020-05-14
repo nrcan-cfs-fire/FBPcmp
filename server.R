@@ -197,97 +197,50 @@ shinyServer(function(input, output, session) {
         )
     }
     
-    output$windROS <- renderPlot({
-        makePlot('WS', 'ROS', "Rate of Spread (m/min)")
+    getFor <- function()
+    {
+        if ('windTab' == input$sidebarmenu)
+        {
+            return('WS')
+        }
+        if ('ffmcTab' == input$sidebarmenu)
+        {
+            return('FFMC')
+        }
+        if ('buiTab' == input$sidebarmenu)
+        {
+            return('BUI')
+        }
+    }
+    
+    output$plotROS <- renderPlot({
+        makePlot(getFor(), 'ROS', "Rate of Spread (m/min)")
     })
     
-    output$windHFI <- renderPlot({
-        makePlot('WS', 'HFI', "Head Fire Intensity (kW/m)")
+    output$plotHFI <- renderPlot({
+        makePlot(getFor(), 'HFI', "Head Fire Intensity (kW/m)")
     })
     
-    output$windSFC <- renderPlot({
-        makePlot('WS',
+    output$plotSFC <- renderPlot({
+        makePlot(getFor(),
                  'SFC',
                  "Surface Fuel Consumption (kg/m^2)",
                  'TFC')
     })
     
-    output$windTFC <- renderPlot({
-        makePlot('WS', 'TFC', "Total Fuel Consumption (kg/m^2)")
+    output$plotTFC <- renderPlot({
+        makePlot(getFor(), 'TFC', "Total Fuel Consumption (kg/m^2)")
     })
     
     # Filter data based on selections
-    output$windTable <- DT::renderDataTable(DT::datatable({
-        data <- makeFuels('WS')
-        if (input$windFuel != "All") {
-            data <- data[data$FuelType == input$windFuel, ]
+    output$table <- DT::renderDataTable(DT::datatable({
+        data <- makeFuels(getFor())
+        if (input$fuel != "All") {
+            data <- data[data$FuelType == input$fuel, ]
         }
-        if (input$windFD != "All") {
-            data <- data[data$FD == substr(input$windFD[1], 1, 1), ]
-        }
-        data
-    }))
-    
-    output$ffmcROS <- renderPlot({
-        makePlot('FFMC', 'ROS', "Rate of Spread (m/min)")
-    })
-    
-    output$ffmcHFI <- renderPlot({
-        makePlot('FFMC', 'HFI', "Head Fire Intensity (kW/m)")
-    })
-    
-    output$ffmcSFC <- renderPlot({
-        makePlot('FFMC',
-                 'SFC',
-                 "Surface Fuel Consumption (kg/m^2)",
-                 'TFC')
-    })
-    
-    output$ffmcTFC <- renderPlot({
-        makePlot('FFMC', 'TFC', "Total Fuel Consumption (kg/m^2)")
-    })
-    
-    # Filter data based on selections
-    output$ffmcTable <- DT::renderDataTable(DT::datatable({
-        data <- makeFuels('FFMC')
-        if (input$ffmcFuel != "All") {
-            data <- data[data$FuelType == input$ffmcFuel, ]
-        }
-        if (input$ffmcFD != "All") {
-            data <- data[data$FD == substr(input$ffmcFD[1], 1, 1), ]
+        if (input$fd != "All") {
+            data <- data[data$FD == substr(input$fd[1], 1, 1), ]
         }
         data
     }))
-    
-    output$buiROS <- renderPlot({
-        makePlot('BUI', 'ROS', "Rate of Spread (m/min)")
-    })
-    
-    output$buiHFI <- renderPlot({
-        makePlot('BUI', 'HFI', "Head Fire Intensity (kW/m)")
-    })
-    
-    output$buiSFC <- renderPlot({
-        makePlot('BUI',
-                 'SFC',
-                 "Surface Fuel Consumption (kg/m^2)",
-                 'TFC')
-    })
-    
-    output$buiTFC <- renderPlot({
-        makePlot('BUI', 'TFC', "Total Fuel Consumption (kg/m^2)")
-    })
-    
-    # Filter data based on selections
-    output$buiTable <- DT::renderDataTable(DT::datatable({
-        data <- makeFuels('BUI')
-        if (input$buiFuel != "All") {
-            data <- data[data$FuelType == input$buiFuel, ]
-        }
-        if (input$buiFD != "All") {
-            data <- data[data$FD == substr(input$buiFD[1], 1, 1), ]
-        }
-        data
-    }))
-    
 })

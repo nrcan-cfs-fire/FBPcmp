@@ -26,7 +26,7 @@ shinyUI(dashboardPage(
         ),
         splitLayout(
             numericInput("lat", "Lat", 55),
-            numericInput("lon", "Lon", -120)
+            numericInput("lon", "Lon",-120)
         ),
         dateInput("date", label = "Date"),
         checkboxGroupInput("fuels", "Fuels", choices = ALL_FUELS, selected =
@@ -123,81 +123,26 @@ shinyUI(dashboardPage(
             )
         )
     ),
-    dashboardBody(tabItems(
-        tabItem(
-            tabName = "windTab",
-            tabsetPanel(
-                tabPanel("ROS", plotOutput("windROS")),
-                tabPanel("HFI", plotOutput("windHFI")),
-                tabPanel("SFC", plotOutput("windSFC")),
-                tabPanel("TFC", plotOutput("windTFC"))
-            ),
-            column(4,
-                   selectInput(
-                       "windFuel",
-                       "Fuel:",
-                       c("All",
-                         ALL_FUELS)
-                   )),
-            column(4,
-                   selectInput(
-                       "windFD",
-                       "Fire Type:",
-                       c("All",
-                         "Surface", "Intermittent Crown", "Crown")
-                   )),
-            # Create a new row for the table.
-            DT::dataTableOutput("windTable")
+    dashboardBody(
+        tabsetPanel(
+            tabPanel("ROS", plotOutput("plotROS")),
+            tabPanel("HFI", plotOutput("plotHFI")),
+            tabPanel("SFC", plotOutput("plotSFC")),
+            tabPanel("TFC", plotOutput("plotTFC"))
         ),
-        tabItem(
-            tabName = "ffmcTab",
-            tabsetPanel(
-                tabPanel("ROS", plotOutput("ffmcROS")),
-                tabPanel("HFI", plotOutput("ffmcHFI")),
-                tabPanel("SFC", plotOutput("ffmcSFC")),
-                tabPanel("TFC", plotOutput("ffmcTFC"))
-            ),
-            column(4,
-                   selectInput(
-                       "ffmcFuel",
-                       "Fuel:",
-                       c("All",
-                         ALL_FUELS)
-                   )),
-            column(4,
-                   selectInput(
-                       "ffmcFD",
-                       "Fire Type:",
-                       c("All",
-                         "Surface", "Intermittent Crown", "Crown")
-                   )),
-            # Create a new row for the table.
-            DT::dataTableOutput("ffmcTable")
-        ),
-        tabItem(
-            tabName = "buiTab",
-            tabsetPanel(
-                tabPanel("ROS", plotOutput("buiROS")),
-                tabPanel("HFI", plotOutput("buiHFI")),
-                tabPanel("SFC", plotOutput("buiSFC")),
-                tabPanel("TFC", plotOutput("buiTFC"))
-            ),
-            column(4,
-                   selectInput(
-                       "buiFuel",
-                       "Fuel:",
-                       c("All",
-                         ALL_FUELS)
-                   )),
-            column(4,
-                   selectInput(
-                       "buiFD",
-                       "Fire Type:",
-                       c("All",
-                         "Surface", "Intermittent Crown", "Crown")
-                   )),
-            # Create a new row for the table.
-            DT::dataTableOutput("buiTable")
-        )
-    ))
+        column(4,
+               selectInput("fuel",
+                           "Fuel:",
+                           c("All",
+                             ALL_FUELS))),
+        column(4,
+               selectInput(
+                   "fd",
+                   "Fire Type:",
+                   c("All",
+                     "Surface", "Intermittent Crown", "Crown")
+               )),
+        # Create a new row for the table.
+        DT::dataTableOutput("table")
+    )
 ))
