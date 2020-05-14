@@ -137,7 +137,7 @@ shinyUI(dashboardPage(
                        "windFuel",
                        "Fuel:",
                        c("All",
-                         "C-1", "C-2", "C-3", "C-4", "C-5", "C-6", "C-7")
+                         ALL_FUELS)
                    )),
             column(4,
                    selectInput(
@@ -162,7 +162,7 @@ shinyUI(dashboardPage(
                        "ffmcFuel",
                        "Fuel:",
                        c("All",
-                         "C-1", "C-2", "C-3", "C-4", "C-5", "C-6", "C-7")
+                         ALL_FUELS)
                    )),
             column(4,
                    selectInput(
@@ -187,7 +187,7 @@ shinyUI(dashboardPage(
                        "buiFuel",
                        "Fuel:",
                        c("All",
-                         "C-1", "C-2", "C-3", "C-4", "C-5", "C-6", "C-7")
+                         ALL_FUELS)
                    )),
             column(4,
                    selectInput(
