@@ -57,7 +57,20 @@ shinyUI(dashboardPage(
                 value = c(0, 100),
                 min = 0,
                 max = 100
-            ),
+            )
+        ),
+        conditionalPanel(
+            "input.sidebarmenu=='ffmcTab' || input.sidebarmenu=='buiTab'",
+            numericInput(
+                "wind",
+                "Wind Speed",
+                value = 20,
+                min = 0,
+                step = 0.1
+            )
+        ),
+        conditionalPanel(
+            "input.sidebarmenu=='windTab'",
             numericInput(
                 "windDMC",
                 "DMC",
@@ -83,13 +96,6 @@ shinyUI(dashboardPage(
         conditionalPanel(
             "input.sidebarmenu=='ffmcTab'",
             numericInput(
-                "ffmcWind",
-                "Wind Speed",
-                value = 20,
-                min = 0,
-                step = 0.1
-            ),
-            numericInput(
                 "ffmcDMC",
                 "DMC",
                 value = 20,
@@ -113,13 +119,6 @@ shinyUI(dashboardPage(
         ),
         conditionalPanel(
             "input.sidebarmenu=='buiTab'",
-            numericInput(
-                "buiWind",
-                "Wind Speed",
-                value = 20,
-                min = 0,
-                step = 0.1
-            ),
             disabled(numericInput(
                 "buiISI",
                 "ISI",
