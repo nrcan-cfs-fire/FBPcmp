@@ -30,59 +30,27 @@ shinyServer(function(input, output, session) {
     makeData <- function(vsWhat, fuel)
     {
         dj <- as.POSIXlt(input$date)$yday
+        ffmc <- input$ffmc
+        bui <- input$bui
+        ws <- input$wind
         if ('WS' == vsWhat)
         {
-            ffmc <- input$ffmc
-            bui <- input$bui
             ws <- input$windRange
             rows <- seq(0, (ws[2] - ws[1]))
-            winds <- seq(ws[1], ws[2])
-            input <-
-                data.table(
-                    ID = rows,
-                    FuelType = fuel,
-                    LAT = input$lat,
-                    LONG = input$lon,
-                    FFMC = ffmc,
-                    BUI = bui,
-                    WS = winds,
-                    GS = 0,
-                    Dj = dj,
-                    Aspect = 0
-                )
-            output <-
-                merge(input, data.table(fbp(input)), by = c('ID'))[, ID := NULL]
-            return (output)
+            ws <- seq(ws[1], ws[2])
         }
         if ('FFMC' == vsWhat)
         {
             ffmc <- input$ffmcRange
-            bui <- input$bui
-            ws <- input$wind
             rows <- seq(0, (ffmc[2] - ffmc[1]) / 0.1)
-            ffmcs <- seq(ffmc[1], ffmc[2], by = 0.1)
-            input <-
-                data.table(
-                    ID = rows,
-                    FuelType = fuel,
-                    LAT = input$lat,
-                    LONG = input$lon,
-                    FFMC = ffmcs,
-                    BUI = bui,
-                    WS = ws,
-                    GS = 0,
-                    Dj = dj,
-                    Aspect = 0
-                )
-            output <-
-                merge(input, data.table(fbp(input)), by = c('ID'))[, ID := NULL]
-            return (output)
+            ffmc <- seq(ffmc[1], ffmc[2], by = 0.1)
         }
-        ffmc <- input$ffmc
-        bui <- input$buiRange
-        ws <- input$wind
-        rows <- seq(0, (bui[2] - bui[1]))
-        buis <- seq(bui[1], bui[2])
+        if ('BUI' == vsWhat)
+        {
+            bui <- input$buiRange
+            rows <- seq(0, (bui[2] - bui[1]))
+            bui <- seq(bui[1], bui[2])
+        }
         input <-
             data.table(
                 ID = rows,
@@ -90,7 +58,7 @@ shinyServer(function(input, output, session) {
                 LAT = input$lat,
                 LONG = input$lon,
                 FFMC = ffmc,
-                BUI = buis,
+                BUI = bui,
                 WS = ws,
                 GS = 0,
                 Dj = dj,
