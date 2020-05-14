@@ -15,30 +15,17 @@ library(data.table)
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output, session) {
-    observeEvent(input$windDMC,
+    observeEvent(input$dmc,
                  {
-                     bui <- cffdrs:::.buiCalc(input$windDMC, input$windDC)
-                     updateNumericInput(session, "windBUI", value = bui)
+                     bui <- cffdrs:::.buiCalc(input$dmc, input$dc)
+                     updateNumericInput(session, "bui", value = bui)
                  })
     
     
-    observeEvent(input$windDC,
+    observeEvent(input$dc,
                  {
-                     bui <- cffdrs:::.buiCalc(input$windDMC, input$windDC)
-                     updateNumericInput(session, "windBUI", value = bui)
-                 })
-    
-    observeEvent(input$ffmcDMC,
-                 {
-                     bui <- cffdrs:::.buiCalc(input$ffmcDMC, input$ffmcDC)
-                     updateNumericInput(session, "ffmcBUI", value = bui)
-                 })
-    
-    
-    observeEvent(input$ffmcDC,
-                 {
-                     bui <- cffdrs:::.buiCalc(input$ffmcDMC, input$ffmcDC)
-                     updateNumericInput(session, "ffmcBUI", value = bui)
+                     bui <- cffdrs:::.buiCalc(input$dmc, input$dc)
+                     updateNumericInput(session, "bui", value = bui)
                  })
     
     observeEvent(input$ffmc,
@@ -59,7 +46,7 @@ shinyServer(function(input, output, session) {
         if ('WS' == vsWhat)
         {
             ffmc <- input$ffmc
-            bui <- input$windBUI
+            bui <- input$bui
             ws <- input$windRange
             rows <- seq(0, (ws[2] - ws[1]))
             winds <- seq(ws[1], ws[2])
@@ -83,7 +70,7 @@ shinyServer(function(input, output, session) {
         if ('FFMC' == vsWhat)
         {
             ffmc <- input$ffmcRange
-            bui <- input$ffmcBUI
+            bui <- input$bui
             ws <- input$wind
             rows <- seq(0, (ffmc[2] - ffmc[1]) / 0.1)
             ffmcs <- seq(ffmc[1], ffmc[2], by = 0.1)
