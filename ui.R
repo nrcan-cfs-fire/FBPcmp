@@ -14,7 +14,8 @@ library(shinyjs)
 CONIFER_FUELS <- c("C1", "C2", "C3", "C4", "C5", "C6", "C7")
 SLASH_FUELS <- c('S1', 'S2', 'S3')
 MIXED_PERCENT <- c('25', '50', '75')
-ALL_FUELS <- c(CONIFER_FUELS, SLASH_FUELS)
+DEAD_PERCENT <- c('30', '60', '100')
+ALL_FUELS <- c(CONIFER_FUELS, SLASH_FUELS, 'M1', 'M2', 'M3', 'M4')
 
 # Define UI for application that draws a histogram
 shinyUI(dashboardPage(
@@ -53,9 +54,6 @@ shinyUI(dashboardPage(
                                    "Slash",
                                    choices = SLASH_FUELS,
                                    selected = SLASH_FUELS),
-            ),
-            column(
-                width = 2,
                 checkboxGroupInput("m1",
                                    "M1",
                                    choices = MIXED_PERCENT,
@@ -64,6 +62,17 @@ shinyUI(dashboardPage(
                                    "M2",
                                    choices = MIXED_PERCENT,
                                    selected = MIXED_PERCENT)
+            ),
+            column(
+                width = 2,
+                checkboxGroupInput("m3",
+                                   "M3",
+                                   choices = DEAD_PERCENT,
+                                   selected = DEAD_PERCENT),
+                checkboxGroupInput("m4",
+                                   "M4",
+                                   choices = DEAD_PERCENT,
+                                   selected = DEAD_PERCENT)
             )
         ),
         conditionalPanel(

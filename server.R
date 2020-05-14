@@ -15,15 +15,24 @@ library(data.table)
 CONIFER_FUELS <- c("C1", "C2", "C3", "C4", "C5", "C6", "C7")
 SLASH_FUELS <- c('S1', 'S2', 'S3')
 MIXED_PERCENT <- c('25', '50', '75')
+DEAD_PERCENT <- c('30', '60', '100')
 ALL_FUELS <-
-    c(CONIFER_FUELS,
-      SLASH_FUELS,
-      'M125',
-      'M150',
-      'M175',
-      'M225',
-      'M250',
-      'M275')
+    c(
+        CONIFER_FUELS,
+        SLASH_FUELS,
+        'M125',
+        'M150',
+        'M175',
+        'M225',
+        'M250',
+        'M275',
+        'M330',
+        'M360',
+        'M3100',
+        'M430',
+        'M460',
+        'M4100'
+    )
 
 
 # Define server logic required to draw a histogram
@@ -66,9 +75,14 @@ shinyServer(function(input, output, session) {
         }
         mainFuel <- substr(fuel, 1, 2)
         pc <- ''
-        if ('M1' == mainFuel)
+        pdf <- ''
+        if ('M1' == mainFuel || 'M2' == mainFuel)
         {
             pc <- substr(fuel, 3, 4)
+        }
+        if ('M3' == mainFuel || 'M4' == mainFuel)
+        {
+            pdf <- substr(fuel, 3, length(fuel))
         }
         input <-
             data.table(
@@ -83,6 +97,7 @@ shinyServer(function(input, output, session) {
                 GS = 0,
                 Dj = dj,
                 PC = pc,
+                PDF = pdf,
                 Aspect = 0
             )
         output <-
@@ -101,6 +116,14 @@ shinyServer(function(input, output, session) {
         for (f in input$m2)
         {
             forFuels <- append(forFuels, paste0('M2', f))
+        }
+        for (f in input$m3)
+        {
+            forFuels <- append(forFuels, paste0('M3', f))
+        }
+        for (f in input$m4)
+        {
+            forFuels <- append(forFuels, paste0('M4', f))
         }
         if (0 == length(forFuels))
         {
