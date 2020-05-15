@@ -213,6 +213,7 @@ shinyUI(dashboardPage(
                "Surface", "Intermittent Crown", "Crown")
            )),
     column(4,
+           tags$br(),
            downloadButton("downloadData", "Download")),
     # Create a new row for the table.
     DT::dataTableOutput("table")
