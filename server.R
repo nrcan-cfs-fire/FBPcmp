@@ -391,4 +391,14 @@ shinyServer(function(input, output, session) {
             data[, FullFuel := NULL]
         }
     }))
+
+    output$downloadData <- downloadHandler(
+        filename = function() {
+            paste(input$sidebarmenu, ".csv", sep = "")
+        },
+        content = function(file) {
+            data <- makeFuels()()[, FullFuel := NULL]
+            write.csv(data, file, row.names = FALSE)
+        }
+    )
 })
