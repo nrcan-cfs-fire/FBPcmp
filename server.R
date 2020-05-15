@@ -397,7 +397,11 @@ shinyServer(function(input, output, session) {
             paste(input$sidebarmenu, ".csv", sep = "")
         },
         content = function(file) {
-            data <- makeFuels()()[, FullFuel := NULL]
+            data <- makeFuels()()
+            if (!is.null(data))
+            {
+                data <- data[, FullFuel := NULL]
+            }
             write.csv(data, file, row.names = FALSE)
         }
     )
