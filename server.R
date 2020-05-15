@@ -249,14 +249,17 @@ shinyServer(function(input, output, session) {
             col <- col + 1
         }
         all_index = match(unique(fuels$FullFuel), ALL_FUELS)
-        legend(
-            minX,
-            y = maxY,
-            legend = unique(fuels$FullFuel),
-            ncol = 2,
-            col = all_index,
-            lty = all_index
-        )
+        if (input$legend)
+        {
+            legend(
+                minX,
+                y = maxY,
+                legend = unique(fuels$FullFuel),
+                ncol = 2,
+                col = all_index,
+                lty = all_index
+            )
+        }
     })
     
     output$plotROS <- renderPlot({
