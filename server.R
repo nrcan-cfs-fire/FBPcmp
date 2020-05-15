@@ -289,70 +289,75 @@ shinyServer(function(input, output, session) {
     {
         vsWhat <- input$sidebarmenu
         fuels <- makeFuels()()
-        if (is.null(ylim))
+        if (!is.null(fuels))
         {
-            ylim <- forWhat
-        }
-        minX <- min(fuels[[vsWhat]])
-        maxY <- max(fuels[[ylim]])
-        cols <- c('FullFuel', vsWhat, forWhat)
-        col <- 1
-        for (fuel in unique(fuels$FullFuel))
-        {
-            f <- fuels[fuels$FullFuel == fuel, ..cols]
-            by_index = match(fuel, ALL_FUELS)
-            if (1 == col)
+            if (is.null(ylim))
             {
-                plot(
+                ylim <- forWhat
+            }
+            minX <- min(fuels[[vsWhat]])
+            maxY <- max(fuels[[ylim]])
+            cols <- c('FullFuel', vsWhat, forWhat)
+            col <- 1
+            for (fuel in unique(fuels$FullFuel))
+            {
+                f <- fuels[fuels$FullFuel == fuel, ..cols]
+                by_index = match(fuel, ALL_FUELS)
+                if (1 == col)
+                {
+                    plot(
+                        f[[forWhat]] ~ f[[vsWhat]],
+                        ylim = c(0, maxY),
+                        type = 'l',
+                        col = by_index,
+                        lty = by_index,
+                        xlab = vsWhat,
+                        ylab = ylab
+                    )
+                }
+                else
+                {
+                    lines(
+                        f[[forWhat]] ~ f[[vsWhat]],
+                        type = 'l',
+                        col = by_index,
+                        lty = by_index
+                    )
+                }
+                f <-
+                    fuels[fuels$FullFuel == fuel &
+                              fuels$FD == 'I', ..cols]
+                lines(
                     f[[forWhat]] ~ f[[vsWhat]],
-                    ylim = c(0, maxY),
                     type = 'l',
                     col = by_index,
                     lty = by_index,
-                    xlab = vsWhat,
-                    ylab = ylab
+                    lwd = 2
+                )
+                f <-
+                    fuels[fuels$FullFuel == fuel &
+                              fuels$FD == 'C', ..cols]
+                lines(
+                    f[[forWhat]] ~ f[[vsWhat]],
+                    type = 'l',
+                    col = by_index,
+                    lty = 1,
+                    lwd = 3
+                )
+                col <- col + 1
+            }
+            all_index = match(unique(fuels$FullFuel), ALL_FUELS)
+            if (input$legend)
+            {
+                legend(
+                    minX,
+                    y = maxY,
+                    legend = unique(fuels$FullFuel),
+                    ncol = 2,
+                    col = all_index,
+                    lty = all_index
                 )
             }
-            else
-            {
-                lines(f[[forWhat]] ~ f[[vsWhat]],
-                      type = 'l',
-                      col = by_index,
-                      lty = by_index)
-            }
-            f <-
-                fuels[fuels$FullFuel == fuel &
-                          fuels$FD == 'I', ..cols]
-            lines(
-                f[[forWhat]] ~ f[[vsWhat]],
-                type = 'l',
-                col = by_index,
-                lty = by_index,
-                lwd = 2
-            )
-            f <-
-                fuels[fuels$FullFuel == fuel &
-                          fuels$FD == 'C', ..cols]
-            lines(
-                f[[forWhat]] ~ f[[vsWhat]],
-                type = 'l',
-                col = by_index,
-                lty = 1,
-                lwd = 3
-            )
-            col <- col + 1
-        }
-        all_index = match(unique(fuels$FullFuel), ALL_FUELS)
-        if (!is.null(fuels) && input$legend)
-        {
-            legend(
-                minX,
-                y = maxY,
-                legend = unique(fuels$FullFuel),
-                ncol = 2,
-                col = all_index,
-                lty = all_index
-            )
         }
     })
     
