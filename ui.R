@@ -59,6 +59,7 @@ shinyUI(dashboardPage(
       numericInput("lon", "Lon", -120)
     ),
     dateInput("date", label = "Date"),
+    prettySwitch("allFuels", "All Fuels", value = TRUE),
     splitLayout(
       column(
         width = 4,

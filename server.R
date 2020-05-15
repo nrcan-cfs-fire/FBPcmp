@@ -52,6 +52,100 @@ shinyServer(function(input, output, session) {
                      updateNumericInput(session, "buiISI", value = isi)
                  })
     
+    observeEvent(input$allFuels,
+                 {
+                     if (input$allFuels)
+                     {
+                         updateCheckboxGroupInput(
+                             session = session,
+                             inputId = "conifer",
+                             choices = CONIFER_FUELS,
+                             selected = CONIFER_FUELS
+                         )
+                         updateCheckboxGroupInput(
+                             session = session,
+                             inputId = "deciduous",
+                             choices = DECIDUOUS_FUELS,
+                             selected = DECIDUOUS_FUELS
+                         )
+                         updateCheckboxGroupInput(
+                             session = session,
+                             inputId = "m1",
+                             choices = MIXED_PERCENT,
+                             selected = MIXED_PERCENT
+                         )
+                         updateCheckboxGroupInput(
+                             session = session,
+                             inputId = "m2",
+                             choices = MIXED_PERCENT,
+                             selected = MIXED_PERCENT
+                         )
+                         updateCheckboxGroupInput(
+                             session = session,
+                             inputId = "m3",
+                             choices = DEAD_PERCENT,
+                             selected = DEAD_PERCENT
+                         )
+                         updateCheckboxGroupInput(
+                             session = session,
+                             inputId = "m4",
+                             choices = DEAD_PERCENT,
+                             selected = DEAD_PERCENT
+                         )
+                         updateCheckboxGroupInput(
+                             session = session,
+                             inputId = "slash",
+                             choices = SLASH_FUELS,
+                             selected = SLASH_FUELS
+                         )
+                     }
+                     else
+                     {
+                         updateCheckboxGroupInput(
+                             session = session,
+                             inputId = "conifer",
+                             choices = CONIFER_FUELS,
+                             selected = NULL
+                         )
+                         updateCheckboxGroupInput(
+                             session = session,
+                             inputId = "deciduous",
+                             choices = DECIDUOUS_FUELS,
+                             selected = NULL
+                         )
+                         updateCheckboxGroupInput(
+                             session = session,
+                             inputId = "m1",
+                             choices = MIXED_PERCENT,
+                             selected = NULL
+                         )
+                         updateCheckboxGroupInput(
+                             session = session,
+                             inputId = "m2",
+                             choices = MIXED_PERCENT,
+                             selected = NULL
+                         )
+                         updateCheckboxGroupInput(
+                             session = session,
+                             inputId = "m3",
+                             choices = DEAD_PERCENT,
+                             selected = NULL
+                         )
+                         updateCheckboxGroupInput(
+                             session = session,
+                             inputId = "m4",
+                             choices = DEAD_PERCENT,
+                             selected = NULL
+                         )
+                         updateCheckboxGroupInput(
+                             session = session,
+                             inputId = "slash",
+                             choices = SLASH_FUELS,
+                             selected = NULL
+                         )
+                     }
+                 })
+    
     makeData <- reactive(function(fuel)
     {
         vsWhat <- input$sidebarmenu
