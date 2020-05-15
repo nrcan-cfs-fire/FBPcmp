@@ -343,7 +343,7 @@ shinyServer(function(input, output, session) {
             col <- col + 1
         }
         all_index = match(unique(fuels$FullFuel), ALL_FUELS)
-        if (input$legend)
+        if (!is.null(fuels) && input$legend)
         {
             legend(
                 minX,
@@ -374,13 +374,16 @@ shinyServer(function(input, output, session) {
     
     # Filter data based on selections
     output$table <- DT::renderDataTable(DT::datatable({
-        data <- makeFuels()()[, FullFuel := NULL]
-        if (input$fuel != "All") {
-            data <- data[data$FuelType == input$fuel,]
+        data <- makeFuels()()
+        if (!is.null(data))
+        {
+            if (input$fuel != "All") {
+                data <- data[data$FuelType == input$fuel,]
+            }
+            if (input$fd != "All") {
+                data <- data[data$FD == substr(input$fd[1], 1, 1),]
+            }
+            data[, FullFuel := NULL]
         }
-        if (input$fd != "All") {
-            data <- data[data$FD == substr(input$fd[1], 1, 1),]
-        }
-        data
     }))
 })
